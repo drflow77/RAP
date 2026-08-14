@@ -830,6 +830,10 @@ button:active {
 
 .field-input {
   width: 100%;
+  /* min-width:0 es imprescindible: los input[type=date] de iOS traen un ancho
+     mínimo intrínseco que ignora width:100% y desbordan la tarjeta. */
+  min-width: 0;
+  max-width: 100%;
   background: var(--surf2);
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -837,6 +841,15 @@ button:active {
   outline: none;
   color: var(--ink);
   font: 400 0.875rem var(--font-sans);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* iOS centra el texto de los campos de fecha y hora; alinéalo como el resto */
+.field-input[type="date"],
+.field-input[type="time"] {
+  display: block;
+  text-align: left;
 }
 
 .field-input:focus {
@@ -1383,6 +1396,7 @@ button:active {
 .settings-row-value {
   flex: none;
   max-width: 48%;
+  min-width: 0; /* mismo motivo que .field-input: input[type=time] en iOS */
   text-align: right;
   background: transparent;
   border: none;
