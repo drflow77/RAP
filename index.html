@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="bosque">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <!-- PWA & Mobile Capabilities -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="RAP Oración">
+  <meta name="application-name" content="RAP Oración">
+  <meta name="theme-color" content="#0A1512">
+  <meta name="description" content="Nunca estás demasiado ocupado para no orar. 365 devocionales diarios y diario de oración RAP.">
+
+  <title>RAP | Diario de Oración y Devocional</title>
+
+  <!-- Manifest & Favicons -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <!-- iOS no acepta SVG como icono de pantalla de inicio: debe ser PNG -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+
+  <!-- Typography: Newsreader (editorial) + Manrope (UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div class="app-halo" aria-hidden="true"></div>
+
+  <div id="app" class="app-container">
+    <!-- Dynamic Component Tree Loaded by main.js -->
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

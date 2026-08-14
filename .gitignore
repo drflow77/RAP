@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.claude/
+
+# Material de diseño de referencia: se conserva en local, fuera del repo
+design_handoff_rap_rediseno/
+.DS_Store
+*.log
+.vite/

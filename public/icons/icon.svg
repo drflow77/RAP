@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Fondo: color base del tema Bosque -->
+  <rect width="512" height="512" fill="#0A1512"/>
+
+  <!-- Marca: cuadrado de acento con las siglas RAP -->
+  <rect x="96" y="96" width="320" height="320" rx="112" fill="#7FC8A0"/>
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
+        font-family="Manrope, system-ui, -apple-system, sans-serif"
+        font-weight="800" font-size="104" letter-spacing="4" fill="#07120E">RAP</text>
+</svg>

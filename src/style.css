@@ -1,0 +1,1584 @@
+/* ==========================================================================
+   RAP · Diario de Oración — Design System (rediseño 2026)
+   "Nunca estás demasiado ocupado para no orar"
+   5 temas: bosque (default) · azul · marfil · lavanda · rosa
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens de color por tema
+   -------------------------------------------------------------------------- */
+:root,
+[data-theme="bosque"] {
+  --bg: #0A1512;
+  --bg2: #0F1F1A;
+  --surf: rgba(255, 255, 255, .045);
+  --surf2: rgba(255, 255, 255, .075);
+  --line: rgba(255, 255, 255, .10);
+  --ink: #EDF3EF;
+  --ink2: #9DB3A9;
+  --ink3: #69837A;
+  --acc: #7FC8A0;
+  --accInk: #07120E;
+  --accSoft: rgba(127, 200, 160, .13);
+  --ok: #7FC8A0;
+  --halo: radial-gradient(120% 80% at 50% -10%, rgba(127, 200, 160, .14), transparent 60%);
+}
+
+[data-theme="azul"] {
+  --bg: #081426;
+  --bg2: #0D1F38;
+  --surf: rgba(255, 255, 255, .05);
+  --surf2: rgba(255, 255, 255, .085);
+  --line: rgba(255, 255, 255, .11);
+  --ink: #EDF3FA;
+  --ink2: #9FB4CC;
+  --ink3: #6B819B;
+  --acc: #63B3ED;
+  --accInk: #06111F;
+  --accSoft: rgba(99, 179, 237, .13);
+  --ok: #5FBF9B;
+  --halo: radial-gradient(120% 80% at 50% -10%, rgba(99, 179, 237, .16), transparent 60%);
+}
+
+[data-theme="marfil"] {
+  --bg: #F5F2EA;
+  --bg2: #EDE8DC;
+  --surf: #FFFFFF;
+  --surf2: #F3F0E7;
+  --line: rgba(24, 30, 26, .12);
+  --ink: #141A16;
+  --ink2: #4F5A53;
+  --ink3: #8A948D;
+  --acc: #2E5D4B;
+  --accInk: #F7FBF8;
+  --accSoft: rgba(46, 93, 75, .10);
+  --ok: #2E5D4B;
+  --halo: radial-gradient(120% 80% at 50% -10%, rgba(46, 93, 75, .08), transparent 60%);
+}
+
+[data-theme="lavanda"] {
+  --bg: #F2F0F8;
+  --bg2: #E8E4F2;
+  --surf: #FFFFFF;
+  --surf2: #F4F2FA;
+  --line: rgba(35, 26, 60, .11);
+  --ink: #1B1630;
+  --ink2: #575072;
+  --ink3: #8B85A3;
+  --acc: #584BA8;
+  --accInk: #F8F7FD;
+  --accSoft: rgba(88, 75, 168, .10);
+  --ok: #3F8C74;
+  --halo: radial-gradient(120% 80% at 50% -10%, rgba(88, 75, 168, .10), transparent 60%);
+}
+
+[data-theme="rosa"] {
+  --bg: #FDF2F5;
+  --bg2: #F8E6EC;
+  --surf: #FFFFFF;
+  --surf2: #FCF3F6;
+  --line: rgba(60, 25, 40, .11);
+  --ink: #2A1420;
+  --ink2: #6B4E5C;
+  --ink3: #A08A94;
+  --acc: #C4557E;
+  --accInk: #FFF7FA;
+  --accSoft: rgba(196, 85, 126, .10);
+  --ok: #3F8C74;
+  --halo: radial-gradient(120% 80% at 50% -10%, rgba(196, 85, 126, .12), transparent 60%);
+}
+
+:root {
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* --------------------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  line-height: 1.5;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+textarea,
+button,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+
+button:active {
+  transform: scale(.96);
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Halo de fondo (capa fija detrás del contenido) */
+.app-halo {
+  position: fixed;
+  inset: 0;
+  background: var(--halo);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout
+   -------------------------------------------------------------------------- */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-view {
+  flex: 1;
+  padding: 0 20px calc(110px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.view-enter {
+  animation: rise .35s ease both;
+}
+
+.screen-head {
+  padding: 2px 2px 0;
+}
+
+.screen-title {
+  font: 400 26px/1.2 var(--font-serif);
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+.section-title {
+  font: 400 24px/1.2 var(--font-serif);
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+.section-subtitle {
+  font: 400 13px/1.6 var(--font-sans);
+  color: var(--ink2);
+}
+
+.eyebrow {
+  font: 600 9.5px/1 var(--font-sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+/* --------------------------------------------------------------------------
+   4. Header
+   -------------------------------------------------------------------------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: var(--bg);
+  padding: calc(10px + var(--safe-top)) 20px 12px;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  flex: 1;
+}
+
+.brand-logo {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 13px;
+  background: var(--acc);
+  color: var(--accInk);
+  display: grid;
+  place-items: center;
+  font: 800 13px var(--font-sans);
+  letter-spacing: .04em;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.brand-title {
+  font: 500 16px/1 var(--font-serif);
+  letter-spacing: .01em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand-subtitle {
+  /* line-height > 1: evita que overflow:hidden recorte las tildes en mayúsculas */
+  font: 600 9.5px/1.3 var(--font-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.streak-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--accSoft);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  font: 700 12px var(--font-sans);
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  color: var(--ink2);
+  display: grid;
+  place-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   5. Navegador de fecha
+   -------------------------------------------------------------------------- */
+.date-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 0;
+}
+
+.date-nav-btn {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink3);
+  display: grid;
+  place-items: center;
+}
+
+.date-indicator {
+  text-align: center;
+}
+
+.date-day-name {
+  display: block;
+  font: 600 9.5px/1 var(--font-sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.date-full {
+  display: block;
+  font: 400 15px/1.4 var(--font-serif);
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   6. Selector de pasos RAP
+   -------------------------------------------------------------------------- */
+.rap-steps-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 5px;
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.step-indicator {
+  border: none;
+  border-radius: 14px;
+  padding: 9px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: transparent;
+  color: var(--ink3);
+}
+
+.step-indicator.active {
+  background: var(--acc);
+  color: var(--accInk);
+}
+
+.step-badge {
+  font: 400 17px/1 var(--font-serif);
+}
+
+.step-label {
+  font: 600 9.5px/1 var(--font-sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   7. Tarjetas
+   -------------------------------------------------------------------------- */
+.rap-card {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+/* Devocional ("R") */
+.devotional-card {
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surf);
+}
+
+.devotional-head {
+  padding: 22px 20px 20px;
+  background: linear-gradient(180deg, var(--accSoft), transparent);
+}
+
+.devotional-theme {
+  font: 600 9.5px/1 var(--font-sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--acc);
+  margin-bottom: 12px;
+}
+
+.devotional-title {
+  font: 400 30px/1.15 var(--font-serif);
+  letter-spacing: -.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.devotional-body {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.verse-box {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--surf2);
+  border-left: 2px solid var(--acc);
+}
+
+.verse-text {
+  font: italic 300 17px/1.6 var(--font-serif);
+  color: var(--ink);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.verse-passage {
+  display: block;
+  margin-top: 9px;
+  font: 700 10.5px var(--font-sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.reflection-body {
+  font: 400 14px/1.7 var(--font-sans);
+  color: var(--ink2);
+  text-wrap: pretty;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.declaration-box {
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px dashed var(--line);
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+
+.declaration-icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--acc);
+  display: block;
+}
+
+.declaration-text {
+  font: 500 13px/1.55 var(--font-sans);
+  color: var(--ink);
+}
+
+.declaration-text strong {
+  color: var(--acc);
+  font-weight: 700;
+}
+
+.card-footer-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.action-pill-btn {
+  flex: 1;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink2);
+  font: 700 12.5px var(--font-sans);
+}
+
+.action-pill-btn.active {
+  background: var(--accSoft);
+  color: var(--acc);
+}
+
+.action-square-btn {
+  margin-top: 12px;
+  width: 44px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink2);
+}
+
+/* Cita del mes */
+.memory-verse-card {
+  border-radius: 22px;
+  padding: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.memory-verse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.memory-tag {
+  font: 600 9.5px/1 var(--font-sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.memory-status-badge {
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink3);
+  font: 700 10.5px var(--font-sans);
+  white-space: nowrap;
+}
+
+.memory-status-badge.memorized {
+  background: var(--accSoft);
+  color: var(--acc);
+}
+
+.memory-verse-quote {
+  font: 300 16px/1.6 var(--font-serif);
+  color: var(--ink);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.memory-verse-quote .blank {
+  color: var(--ink3);
+  letter-spacing: .05em;
+}
+
+.memory-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.memory-verse-passage {
+  font: 700 10.5px var(--font-sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.link-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink3);
+  font: 600 11.5px var(--font-sans);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   8. Tres personas ("A")
+   -------------------------------------------------------------------------- */
+.frequent-contacts-bar {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 2px 0 4px;
+  scrollbar-width: none;
+}
+
+.quick-contact-chip {
+  flex: none;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surf);
+  color: var(--ink2);
+  font: 600 12px var(--font-sans);
+  white-space: nowrap;
+}
+
+.person-card {
+  border-radius: 20px;
+  padding: 15px 16px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.person-card.prayed {
+  background: var(--accSoft);
+  border-color: var(--acc);
+}
+
+.person-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.person-number-badge {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--ink3);
+  display: grid;
+  place-items: center;
+  font: 700 11px var(--font-sans);
+}
+
+.person-card.prayed .person-number-badge {
+  border-color: var(--acc);
+  background: var(--acc);
+  color: var(--accInk);
+}
+
+.person-name-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font: 500 16px/1.2 var(--font-serif);
+}
+
+.person-reason-input {
+  width: 100%;
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 12px;
+  outline: none;
+  color: var(--ink2);
+  font: 400 12.5px var(--font-sans);
+}
+
+.person-card.prayed .person-reason-input {
+  background: transparent;
+}
+
+.person-remove {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink3);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.add-person-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px dashed var(--line);
+  background: transparent;
+  color: var(--ink2);
+  font: 600 12.5px var(--font-sans);
+}
+
+::placeholder {
+  color: var(--ink3);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   9. Petición personal ("P")
+   -------------------------------------------------------------------------- */
+.prayer-textarea {
+  width: 100%;
+  min-height: 130px;
+  resize: none;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+  outline: none;
+  color: var(--ink);
+  font: 300 16px/1.6 var(--font-serif);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.prayer-tag-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tag-btn {
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink2);
+  font: 600 12px var(--font-sans);
+}
+
+.tag-btn.selected {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--accInk);
+}
+
+.cta-btn {
+  width: 100%;
+  padding: 17px;
+  border-radius: 20px;
+  border: none;
+  background: var(--acc);
+  color: var(--accInk);
+  font: 700 15px var(--font-sans);
+  letter-spacing: .01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.cta-btn.completed {
+  background: var(--ok);
+}
+
+.slogan-footer {
+  text-align: center;
+  font: italic 300 14px/1.6 var(--font-serif);
+  color: var(--ink3);
+}
+
+/* --------------------------------------------------------------------------
+   10. Testimonios
+   -------------------------------------------------------------------------- */
+.stats-row {
+  display: flex;
+  gap: 10px;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 15px;
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.stat-number {
+  font: 400 26px/1 var(--font-serif);
+  color: var(--acc);
+}
+
+.stat-label {
+  margin-top: 4px;
+  font: 600 9.5px var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.testimony-item {
+  border-radius: 20px;
+  padding: 16px 17px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.testimony-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.testimony-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accSoft);
+  color: var(--acc);
+  font: 700 10px var(--font-sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.testimony-date {
+  font: 500 11px var(--font-sans);
+  color: var(--ink3);
+}
+
+.testimony-title {
+  font: 300 16px/1.55 var(--font-serif);
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.testimony-note {
+  font: 400 12.5px/1.6 var(--font-sans);
+  color: var(--ink2);
+}
+
+.testimony-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink3);
+  font: 600 11px var(--font-sans);
+}
+
+.ghost-btn.accent {
+  color: var(--acc);
+}
+
+.empty-state {
+  padding: 30px 16px;
+  text-align: center;
+  border-radius: 20px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.empty-state p:first-child {
+  font: 300 17px/1.5 var(--font-serif);
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.empty-state p:last-child {
+  font: 400 12.5px/1.6 var(--font-sans);
+  color: var(--ink3);
+}
+
+/* --------------------------------------------------------------------------
+   11. Racha
+   -------------------------------------------------------------------------- */
+.streak-hero {
+  border-radius: 26px;
+  padding: 24px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.streak-ring {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  flex: none;
+  border-radius: 999px;
+}
+
+.streak-ring-inner {
+  position: absolute;
+  inset: 9px;
+  border-radius: 999px;
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.streak-ring-number {
+  font: 400 26px/1 var(--font-serif);
+  color: var(--ink);
+}
+
+.streak-ring-label {
+  font: 600 8.5px var(--font-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.streak-hero-title {
+  font: 400 22px/1.2 var(--font-serif);
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.streak-hero-text {
+  font: 400 12.5px/1.6 var(--font-sans);
+  color: var(--ink2);
+}
+
+.calendar-card {
+  border-radius: 26px;
+  padding: 20px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.calendar-month {
+  font: 500 17px var(--font-serif);
+  color: var(--ink);
+}
+
+.calendar-legend {
+  font: 600 9.5px var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.calendar-nav .date-nav-btn {
+  width: 26px;
+  height: 26px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font: 700 9.5px var(--font-sans);
+  color: var(--ink3);
+  padding-bottom: 2px;
+}
+
+.calendar-day-cell {
+  aspect-ratio: 1;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font: 600 12px var(--font-sans);
+  background: var(--surf2);
+  color: var(--ink3);
+  border: 1px solid transparent;
+}
+
+.calendar-day-cell.prayed {
+  background: var(--accSoft);
+  color: var(--acc);
+}
+
+.calendar-day-cell.today {
+  border-color: var(--acc);
+}
+
+.calendar-day-cell.empty {
+  background: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   12. 365 Días
+   -------------------------------------------------------------------------- */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 15px;
+  border-radius: 16px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  color: var(--ink3);
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font: 400 13px var(--font-sans);
+}
+
+.month-pills {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.month-pill {
+  flex: none;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surf);
+  color: var(--ink2);
+  font: 600 12px var(--font-sans);
+}
+
+.month-pill.active {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--accInk);
+}
+
+.devotional-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 15px 16px;
+  border-radius: 20px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  width: 100%;
+  text-align: left;
+}
+
+.devotional-row-date {
+  flex: none;
+  width: 44px;
+  text-align: center;
+}
+
+.devotional-row-day {
+  font: 400 22px/1 var(--font-serif);
+  color: var(--acc);
+}
+
+.devotional-row-month {
+  margin-top: 3px;
+  font: 700 8.5px var(--font-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.devotional-row-title {
+  font: 500 16px/1.3 var(--font-serif);
+  color: var(--ink);
+}
+
+.devotional-row-passage {
+  margin-top: 4px;
+  font: 600 10.5px var(--font-sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.list-hint {
+  text-align: center;
+  font: 400 11.5px/1.6 var(--font-sans);
+  color: var(--ink3);
+  padding: 6px 0;
+}
+
+/* --------------------------------------------------------------------------
+   13. Ajustes (bottom sheet)
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, .55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: rise .25s ease both;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg2);
+  border-top: 1px solid var(--line);
+  border-radius: 32px 32px 0 0;
+  padding: 22px 22px calc(30px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sheet-grabber {
+  width: 38px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--line);
+  margin: 0 auto;
+  flex: none;
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sheet-title {
+  font: 400 22px var(--font-serif);
+  color: var(--ink);
+}
+
+.sheet-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink2);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.settings-block {
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-label {
+  font: 600 13.5px var(--font-sans);
+  color: var(--ink);
+}
+
+.settings-hint {
+  margin-top: 2px;
+  font: 400 11.5px var(--font-sans);
+  color: var(--ink3);
+}
+
+.theme-swatches {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-swatch {
+  flex: 1;
+  padding: 9px 4px 10px;
+  border-radius: 14px;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.theme-swatch.active {
+  border-color: var(--acc);
+}
+
+.theme-swatch-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, .12);
+}
+
+.theme-swatch-label {
+  font: 600 10px var(--font-sans);
+  color: var(--ink3);
+}
+
+.theme-swatch.active .theme-swatch-label {
+  color: var(--acc);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.settings-row-value {
+  flex: none;
+  max-width: 48%;
+  text-align: right;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--acc);
+  font: 600 12.5px var(--font-sans);
+}
+
+input.settings-row-value,
+select.settings-row-value {
+  direction: rtl;
+}
+
+select.settings-row-value {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.settings-inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.frequent-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  color: var(--ink2);
+  font: 600 12px var(--font-sans);
+}
+
+.frequent-tag button {
+  background: transparent;
+  border: none;
+  color: var(--ink3);
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+}
+
+.settings-inline-form {
+  display: flex;
+  gap: 8px;
+}
+
+.settings-inline-form input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 12px;
+  outline: none;
+  color: var(--ink2);
+  font: 400 12.5px var(--font-sans);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.settings-actions .ghost-btn {
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 8px 10px;
+}
+
+.sheet-footer {
+  text-align: center;
+  padding-top: 4px;
+}
+
+.sheet-footer p {
+  font: 400 11px/1.6 var(--font-sans);
+  color: var(--ink3);
+}
+
+/* --------------------------------------------------------------------------
+   14. Portada / Bienvenida
+   -------------------------------------------------------------------------- */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: calc(34px + var(--safe-top)) 26px calc(40px + var(--safe-bottom));
+  animation: rise .4s ease both;
+  overflow-y: auto;
+}
+
+.welcome-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--halo);
+  pointer-events: none;
+}
+
+.welcome-inner {
+  position: relative;
+  width: 100%;
+  max-width: 428px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.welcome-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: var(--acc);
+  color: var(--accInk);
+  display: grid;
+  place-items: center;
+  font: 800 16px var(--font-sans);
+}
+
+.welcome-eyebrow {
+  font: 600 9.5px var(--font-sans);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--acc);
+  margin-bottom: 12px;
+}
+
+.welcome-headline {
+  font: 300 34px/1.12 var(--font-serif);
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.welcome-card {
+  border-radius: 24px;
+  padding: 20px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.welcome-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.welcome-card-index {
+  font: 700 10px var(--font-sans);
+  letter-spacing: .1em;
+  color: var(--ink3);
+}
+
+.welcome-verse {
+  font: 300 19px/1.55 var(--font-serif);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.welcome-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+}
+
+.welcome-card-passage {
+  font: 700 10.5px var(--font-sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.welcome-card-progress {
+  font: 400 11px var(--font-sans);
+  color: var(--ink3);
+  text-align: right;
+}
+
+.year-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.year-dot {
+  flex: 1;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--line);
+}
+
+.year-dot.done { background: var(--acc); }
+.year-dot.current { background: var(--ink3); }
+
+/* --------------------------------------------------------------------------
+   15. Navegación inferior
+   -------------------------------------------------------------------------- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 5;
+  padding: 11px 14px calc(26px + var(--safe-bottom));
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background: linear-gradient(180deg, transparent, var(--bg) 32%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.nav-item {
+  border: none;
+  background: transparent;
+  color: var(--ink3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 0;
+}
+
+.nav-item.active {
+  color: var(--acc);
+}
+
+.nav-item span {
+  font: 700 9.5px var(--font-sans);
+  letter-spacing: .04em;
+}
+
+/* --------------------------------------------------------------------------
+   16. Banner de instalación
+   -------------------------------------------------------------------------- */
+.install-banner {
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.install-banner-text h4 {
+  font: 600 13px var(--font-sans);
+  color: var(--ink);
+}
+
+.install-banner-text p {
+  margin-top: 2px;
+  font: 400 11.5px/1.5 var(--font-sans);
+  color: var(--ink3);
+}
+
+.install-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.install-banner-btn {
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: none;
+  background: var(--acc);
+  color: var(--accInk);
+  font: 700 12px var(--font-sans);
+  white-space: nowrap;
+}
+
+.install-banner-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink3);
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* --------------------------------------------------------------------------
+   17. Utilidades
+   -------------------------------------------------------------------------- */
+.stack-14 { display: flex; flex-direction: column; gap: 14px; }
+.stack-12 { display: flex; flex-direction: column; gap: 12px; }
+.stack-10 { display: flex; flex-direction: column; gap: 10px; }
+.text-center { text-align: center; }
+.hidden { display: none !important; }

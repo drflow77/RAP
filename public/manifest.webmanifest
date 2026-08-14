@@ -1,0 +1,51 @@
+{
+  "name": "RAP - Diario de Oración y Devocional",
+  "short_name": "RAP Oración",
+  "description": "Nunca estás demasiado ocupado para no orar. Devocional diario de 365 días y método de oración RAP.",
+  "start_url": "./",
+  "id": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A1512",
+  "theme_color": "#0A1512",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["lifestyle", "books", "productivity"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Devocional de Hoy",
+      "short_name": "Devocional",
+      "description": "Abrir el devocional y oraciones del día",
+      "url": "./#today",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Muro de Testimonios",
+      "short_name": "Testimonios",
+      "description": "Ver oraciones respondidas",
+      "url": "./#answered",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
