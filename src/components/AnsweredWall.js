@@ -21,8 +21,6 @@ export function renderAnsweredWall(container, props) {
     .slice()
     .sort((a, b) => String(b.answeredDate || '').localeCompare(String(a.answeredDate || '')));
 
-  const entries = storage.getAllDailyEntries();
-  const waitingCount = Object.values(entries).filter((e) => (e.personalPrayer || '').trim()).length;
   const isFormOpen = props?.isFormOpen || false;
   const rerender = (state) => renderAnsweredWall(container, { ...props, ...state });
 
@@ -36,11 +34,7 @@ export function renderAnsweredWall(container, props) {
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-number">${list.length}</div>
-          <div class="stat-label">Respondidas</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">${waitingCount}</div>
-          <div class="stat-label">En espera</div>
+          <div class="stat-label">${list.length === 1 ? 'Respondida' : 'Respondidas'}</div>
         </div>
       </div>
 

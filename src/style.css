@@ -898,6 +898,13 @@ button:active {
   border: 1px solid var(--line);
 }
 
+/* Una sola tarjeta no debe estirarse a todo el ancho: quedaría medio vacía */
+.stat-card:only-child {
+  flex: 0 1 auto;
+  min-width: 132px;
+  padding: 14px 20px;
+}
+
 .stat-number {
   font: 400 1.625rem/1 var(--font-serif);
   color: var(--acc);
