@@ -24,6 +24,25 @@ export const CONFETTI_PALETTES = {
   lavanda: ['#584BA8', '#A79BE8', '#3F8C74', '#1B1630']
 };
 
+// Escalas de tamaño de texto. Multiplican la base de 16px de <html>, y como
+// toda la tipografía está en rem, escala la interfaz entera de forma uniforme.
+export const TEXT_SCALES = [
+  { value: 1, label: 'Normal' },
+  { value: 1.15, label: 'Grande' },
+  { value: 1.3, label: 'Muy grande' }
+];
+
+export function normalizeTextScale(scale) {
+  const n = Number(scale);
+  return TEXT_SCALES.some((s) => s.value === n) ? n : 1;
+}
+
+export function applyTextScale(scale) {
+  const value = normalizeTextScale(scale);
+  document.documentElement.style.setProperty('--text-scale', String(value));
+  return value;
+}
+
 const LEGACY = { dark: 'bosque', light: 'marfil' };
 
 // Migra los valores antiguos ('dark' | 'light') y valida la clave.

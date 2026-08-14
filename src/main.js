@@ -1,7 +1,7 @@
 // RAP PWA Main Entrypoint & Orchestration
 import confetti from 'canvas-confetti';
 import { storage } from './state/storage.js';
-import { applyTheme, normalizeTheme, CONFETTI_PALETTES } from './state/themes.js';
+import { applyTheme, normalizeTheme, applyTextScale, CONFETTI_PALETTES } from './state/themes.js';
 import { devotionalService } from './services/devotionalService.js';
 import { notificationService } from './services/notificationService.js';
 
@@ -45,7 +45,14 @@ const appState = {
 // Tema inicial (migra los valores antiguos 'dark' / 'light')
 appState.settings.theme = normalizeTheme(appState.settings.theme);
 applyTheme(appState.settings.theme);
-storage.saveSettings({ theme: appState.settings.theme });
+
+// Tamaño de texto elegido por el usuario
+appState.settings.textScale = applyTextScale(appState.settings.textScale);
+
+storage.saveSettings({
+  theme: appState.settings.theme,
+  textScale: appState.settings.textScale
+});
 
 const appRoot = document.getElementById('app');
 
@@ -88,7 +95,7 @@ function setTheme(themeKey) {
 function renderBottomNav() {
   const tabs = [
     { key: 'today', label: 'Hoy', icon: icons.book },
-    { key: 'answered', label: 'Testimonios', icon: icons.starOutline },
+    { key: 'answered', label: 'Respondidas', icon: icons.starOutline },
     { key: 'streak', label: 'Racha', icon: icons.calendar },
     { key: 'explore', label: '365 Días', icon: icons.grid }
   ];

@@ -13,7 +13,8 @@ const DEFAULT_SETTINGS = {
   reminderEnabled: false,
   reminderTime: '07:00',
   userName: '',
-  audioVoiceRate: 1.0
+  audioVoiceRate: 1.0,
+  textScale: 1 // 1 = normal · 1.15 = grande · 1.3 = muy grande
 };
 
 const DEFAULT_FREQUENT_PEOPLE = [
@@ -142,7 +143,8 @@ export const storage = {
         request: prayer.request,
         testimony: prayer.testimony || '',
         prayedDate: prayer.prayedDate || new Date().toISOString().split('T')[0],
-        answeredDate: new Date().toISOString().split('T')[0],
+        // La fecha en que Dios respondió la escribe el usuario; puede ser anterior a hoy
+        answeredDate: prayer.answeredDate || new Date().toISOString().split('T')[0],
         category: prayer.category || 'General'
       };
       list.unshift(newEntry);

@@ -1,7 +1,7 @@
 // SettingsModal Component — hoja inferior: color de la app, nombre, recordatorio, voz, datos
 import { storage } from '../state/storage.js';
 import { notificationService } from '../services/notificationService.js';
-import { THEMES, normalizeTheme } from '../state/themes.js';
+import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale } from '../state/themes.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 
@@ -14,6 +14,7 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
   const settings = storage.getSettings();
   const activeTheme = normalizeTheme(settings.theme);
   const modeLabel = THEMES.find((t) => t.key === activeTheme)?.mode || 'Oscuro';
+  const activeScale = normalizeTextScale(settings.textScale);
   const frequentPeople = storage.getFrequentPeople();
 
   const voices = ('speechSynthesis' in window ? window.speechSynthesis.getVoices() : [])
@@ -39,6 +40,21 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
               <button class="theme-swatch ${t.key === activeTheme ? 'active' : ''}" data-theme="${t.key}">
                 <span class="theme-swatch-dot" style="background: ${t.swatch}"></span>
                 <span class="theme-swatch-label">${t.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="settings-block">
+          <div>
+            <div class="settings-label">Tamaño del texto</div>
+            <div class="settings-hint">Para leer más cómodo</div>
+          </div>
+          <div class="text-scale-options">
+            ${TEXT_SCALES.map((s) => `
+              <button class="text-scale-option ${s.value === activeScale ? 'active' : ''}" data-scale="${s.value}">
+                <span class="text-scale-sample" style="font-size: ${Math.round(13 * s.value)}px">Aa</span>
+                <span class="text-scale-label">${s.label}</span>
               </button>
             `).join('')}
           </div>
@@ -127,6 +143,17 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
   container.querySelectorAll('.theme-swatch').forEach((btn) => {
     btn.addEventListener('click', () => {
       onThemeChange(btn.getAttribute('data-theme'));
+    });
+  });
+
+  // Tamaño del texto: se aplica al instante y se persiste
+  container.querySelectorAll('.text-scale-option').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const scale = applyTextScale(btn.getAttribute('data-scale'));
+      storage.saveSettings({ textScale: scale });
+      container.querySelectorAll('.text-scale-option').forEach((b) => {
+        b.classList.toggle('active', Number(b.getAttribute('data-scale')) === scale);
+      });
     });
   });
 

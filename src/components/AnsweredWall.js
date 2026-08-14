@@ -1,4 +1,4 @@
-// AnsweredWall Component — Muro de testimonios (oraciones respondidas)
+// AnsweredWall Component — Oraciones respondidas
 import { storage } from '../state/storage.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
@@ -11,16 +11,26 @@ function formatDate(dateStr) {
     .replace('.', '');
 }
 
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
 export function renderAnsweredWall(container, props) {
-  const list = storage.getAnsweredPrayers();
+  // Más recientes primero por fecha de respuesta, que ahora puede ser retroactiva
+  const list = storage.getAnsweredPrayers()
+    .slice()
+    .sort((a, b) => String(b.answeredDate || '').localeCompare(String(a.answeredDate || '')));
+
   const entries = storage.getAllDailyEntries();
   const waitingCount = Object.values(entries).filter((e) => (e.personalPrayer || '').trim()).length;
+  const isFormOpen = props?.isFormOpen || false;
+  const rerender = (state) => renderAnsweredWall(container, { ...props, ...state });
 
   container.innerHTML = `
     <div class="stack-14 view-enter">
       <div class="screen-head">
-        <h2 class="screen-title">Muro de testimonios</h2>
-        <p class="section-subtitle">Oraciones que Dios ya respondió.</p>
+        <h2 class="screen-title">Oraciones respondidas</h2>
+        <p class="section-subtitle">El registro de lo que Dios ya contestó.</p>
       </div>
 
       <div class="stats-row">
@@ -34,11 +44,37 @@ export function renderAnsweredWall(container, props) {
         </div>
       </div>
 
-      <div class="testimony-tools">
-        <button id="btn-add-testimony-manual" class="ghost-btn accent">${icons.plus} Nueva respuesta</button>
-      </div>
+      ${isFormOpen ? `
+        <div class="answered-form">
+          <div class="answered-form-title">Registrar una respuesta</div>
 
-      ${list.length === 0 ? `
+          <label class="field">
+            <span class="field-label">¿Qué te respondió Dios?</span>
+            <input type="text" id="af-title" class="field-input" placeholder="Ej. Sanidad de mi mamá" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">¿Cómo lo hizo? (opcional)</span>
+            <textarea id="af-detail" class="field-input field-textarea" placeholder="Cuenta brevemente cómo respondió"></textarea>
+          </label>
+
+          <label class="field">
+            <span class="field-label">¿Cuándo la respondió?</span>
+            <input type="date" id="af-date" class="field-input" value="${today()}" max="${today()}" />
+          </label>
+
+          <div class="answered-form-actions">
+            <button id="af-cancel" class="ghost-btn">Cancelar</button>
+            <button id="af-save" class="cta-btn cta-compact">Guardar respuesta</button>
+          </div>
+        </div>
+      ` : `
+        <div class="testimony-tools">
+          <button id="btn-add-testimony-manual" class="ghost-btn accent">${icons.plus} Registrar una respuesta</button>
+        </div>
+      `}
+
+      ${list.length === 0 && !isFormOpen ? `
         <div class="empty-state">
           <p>Aún no has registrado oraciones respondidas.</p>
           <p>Cuando Dios responda una petición, guárdala aquí para recordar su fidelidad.</p>
@@ -61,24 +97,41 @@ export function renderAnsweredWall(container, props) {
   `;
 
   container.querySelector('#btn-add-testimony-manual')?.addEventListener('click', () => {
-    const title = prompt('¿Qué petición respondió Dios? (ej. Sanidad en mi familia, nuevo empleo)');
-    if (!title || !title.trim()) return;
+    rerender({ isFormOpen: true });
+    container.querySelector('#af-title')?.focus();
+  });
 
-    const details = prompt('Detalles o testimonio de cómo respondió Dios:') || '';
+  container.querySelector('#af-cancel')?.addEventListener('click', () => rerender({ isFormOpen: false }));
+
+  container.querySelector('#af-save')?.addEventListener('click', () => {
+    const titleEl = container.querySelector('#af-title');
+    const title = titleEl.value.trim();
+    if (!title) {
+      titleEl.classList.add('field-error');
+      titleEl.focus();
+      return;
+    }
+
     storage.addAnsweredPrayer({
-      title: title.trim(),
-      request: details.trim(),
+      title,
+      request: container.querySelector('#af-detail').value.trim(),
+      answeredDate: container.querySelector('#af-date').value || today(),
       category: 'Testimonio'
     });
-    renderAnsweredWall(container, props);
+
+    rerender({ isFormOpen: false });
+  });
+
+  container.querySelector('#af-title')?.addEventListener('input', (e) => {
+    e.target.classList.remove('field-error');
   });
 
   container.querySelectorAll('.btn-delete-testimony').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id');
-      if (confirm('¿Eliminar este testimonio?')) {
+      if (confirm('¿Eliminar este registro?')) {
         storage.deleteAnsweredPrayer(id);
-        renderAnsweredWall(container, props);
+        rerender({ isFormOpen: false });
       }
     });
   });
