@@ -472,7 +472,10 @@ button:active {
 .reflection-body {
   font: 400 0.875rem/1.7 var(--font-sans);
   color: var(--ink2);
-  text-wrap: pretty;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
   user-select: text;
   -webkit-user-select: text;
 }
@@ -501,6 +504,80 @@ button:active {
 .declaration-text strong {
   color: var(--acc);
   font-weight: 700;
+}
+
+/* Días cuyo PDF del mes todavía no llega: se muestran tema, título y versículo
+   (contenido revisado) y se dice claramente que falta la enseñanza, en vez de
+   rellenar con texto genérico. */
+.pending-tag {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accSoft);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  font: 700 0.5938rem var(--font-sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.pending-box {
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px dashed var(--line);
+}
+
+.pending-text {
+  font: 400 0.8125rem/1.65 var(--font-sans);
+  color: var(--ink2);
+}
+
+.row-pending {
+  color: var(--acc);
+}
+
+.write-box,
+.prayer-box {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surf2, var(--surf));
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.write-label,
+.prayer-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 0.625rem var(--font-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.write-text {
+  font: 500 0.8125rem/1.6 var(--font-sans);
+  color: var(--ink);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.prayer-box {
+  border-left: 3px solid var(--acc);
+}
+
+.prayer-text {
+  font: 400 0.8125rem/1.7 var(--font-serif, var(--font-sans));
+  font-style: italic;
+  color: var(--ink2, var(--ink));
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .card-footer-actions {
@@ -1522,15 +1599,24 @@ select.settings-row-value {
   gap: 18px;
 }
 
+.welcome-brand {
+  display: flex;
+  justify-content: center;
+}
+
+/* El logotipo es monocromo con alfa, así que se pinta con máscara: toma el
+   color de acento de cada tema y se ve bien en los 5 (claros y oscuros).
+   La imagen la asigna WelcomeMemoryModal, que sí conoce la base de Vite. */
 .welcome-logo {
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  background: var(--acc);
-  color: var(--accInk);
-  display: grid;
-  place-items: center;
-  font: 800 1rem var(--font-sans);
+  width: 116px;
+  height: 116px;
+  background-color: var(--acc);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
 .welcome-eyebrow {

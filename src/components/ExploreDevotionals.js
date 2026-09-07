@@ -65,7 +65,7 @@ export function renderExploreDevotionals(container, { onSelectDevotional }) {
             </div>
             <div style="flex: 1; min-width: 0;">
               <div class="devotional-row-title">${esc(d.title)}</div>
-              <div class="devotional-row-passage">${esc(d.passage)}</div>
+              <div class="devotional-row-passage">${esc(d.passage)}${d.pending ? ' · <span class="row-pending">en espera</span>' : ''}</div>
             </div>
           </button>
         `).join('')}

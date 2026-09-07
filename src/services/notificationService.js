@@ -53,7 +53,16 @@ export const notificationService = {
 
     window.speechSynthesis.cancel(); // Stop any ongoing speech
 
-    const textToRead = `${devotional.title}. Pasaje bíblico: ${devotional.passage}. ${devotional.verse}. Reflexión: ${devotional.reflection}. Declaración de fe: ${devotional.declaration}`;
+    // Los días en espera solo tienen título, pasaje y versículo: se leen esos.
+    const textToRead = [
+      `${devotional.title}.`,
+      `Pasaje bíblico: ${devotional.passage}.`,
+      `${devotional.verse}.`,
+      devotional.reflection ? `Reflexión: ${devotional.reflection}` : null,
+      devotional.declaration ? `Declaración de fe: ${devotional.declaration}` : null,
+      devotional.prayerPrompt ? `Para escribir: ${devotional.prayerPrompt}` : null,
+      devotional.prayer ? `Oración: ${devotional.prayer}` : null
+    ].filter(Boolean).join(' ');
     const utterance = new SpeechSynthesisUtterance(textToRead);
     utterance.lang = 'es-ES';
     utterance.rate = 0.95;

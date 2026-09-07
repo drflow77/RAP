@@ -15,10 +15,16 @@ export function renderWelcomeMemoryModal(container, { currentDate, onClose }) {
     return '';
   });
 
+  // Ruta estable (no lleva hash), así el service worker puede precachearla.
+  const logoUrl = `${import.meta.env.BASE_URL}brand/logo-faa.png`;
+
   container.innerHTML = `
     <div class="welcome-overlay" id="welcome-overlay">
       <div class="welcome-inner">
-        <div class="welcome-logo">RAP</div>
+        <div class="welcome-brand">
+          <div class="welcome-logo" role="img" aria-label="Fundación Amigos Axapusco"
+               style="-webkit-mask-image:url('${logoUrl}');mask-image:url('${logoUrl}')"></div>
+        </div>
 
         <div>
           <div class="welcome-eyebrow">Relación · Amor · Petición</div>

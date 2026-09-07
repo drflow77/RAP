@@ -61,9 +61,9 @@ export const MONTHLY_MEMORY_VERSES = [
   {
     month: 9,
     monthName: "Septiembre",
-    theme: "Orar sin Cesar",
-    passage: "1 Tesalonicenses 5:16-18",
-    verse: "Estad siempre gozosos. Orad sin cesar. Dad gracias en todo, porque esta es la voluntad de Dios para con vosotros en Cristo Jesús."
+    theme: "Humildad en la Prueba",
+    passage: "Génesis 50:20",
+    verse: "Vosotros pensasteis mal contra mí, mas Dios lo encaminó a bien, para hacer lo que vemos hoy, para mantener en vida a mucho pueblo."
   },
   {
     month: 10,

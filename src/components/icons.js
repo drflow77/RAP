@@ -17,6 +17,7 @@ export const icons = {
 
   search: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="6.2" cy="6.2" r="4.2"/><path d="M9.4 9.4 12 12"/></svg>`,
 
+  pen: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.2 2.3a1.6 1.6 0 0 1 2.3 2.3L5.6 12.5l-3 .8.8-3 7.8-8Z"/></svg>`,
   book: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 4.5h5c1.1 0 2 .9 2 2v9c0-1.1-.9-2-2-2h-5v-9ZM16.5 4.5h-5c-1.1 0-2 .9-2 2v9c0-1.1.9-2 2-2h5v-9Z"/></svg>`,
 
   starOutline: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 2.8 2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 8.1l5-.7L10 2.8Z" stroke-linejoin="round"/></svg>`,

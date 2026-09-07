@@ -1,5 +1,10 @@
-// Subir la versión invalida la caché anterior al activarse (rediseño 2026).
-const CACHE_NAME = 'rap-app-v2';
+// Subir la versión invalida la caché anterior al activarse.
+// v3: iconos nuevos, contenido real de septiembre y arreglos de offline.
+const CACHE_NAME = 'rap-app-v3';
+// Caché aparte para las fuentes de Google: no se borra al subir de versión,
+// porque su contenido no cambia y volver a descargarlas es caro.
+const FONT_CACHE = 'rap-fonts-v1';
+
 // Rutas relativas al propio sw.js: funcionan igual en la raíz ('/') que en
 // una subcarpeta como GitHub Pages ('/RAP/').
 const ASSETS_TO_CACHE = [
@@ -8,71 +13,122 @@ const ASSETS_TO_CACHE = [
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
+  './brand/logo-faa.png',
   './data/devotionals.json'
 ];
+
+const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+
+// El servidor manda 'Vary: Origin', y una petición guardada con cabeceras
+// distintas a las de la búsqueda no haría match: sin ignoreVary la app se
+// quedaba en blanco sin conexión aunque el archivo estuviera en la caché.
+const MATCH_OPTS = { ignoreVary: true };
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
-        console.warn('Some cache assets failed to fetch during install:', err);
-      });
-    })
+      // Uno a uno en vez de addAll: addAll es atómico, así que un solo 404
+      // dejaba la caché entera vacía y la app sin modo offline.
+      return Promise.allSettled(ASSETS_TO_CACHE.map((url) => cache.add(url)))
+        .then((results) => {
+          const fallidos = results
+            .map((r, i) => (r.status === 'rejected' ? ASSETS_TO_CACHE[i] : null))
+            .filter(Boolean);
+          if (fallidos.length) console.warn('No se pudieron cachear:', fallidos);
+        });
+    }).then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME && key !== FONT_CACHE)
+          .map((key) => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
+function esFuente(url) {
+  return FONT_HOSTS.includes(url.hostname);
+}
+
+// Sirve lo que haya en caché al instante y refresca por detrás. Se usa para el
+// JSON de devocionales: la app abre siempre rápido y sin conexión, y cuando se
+// publica contenido nuevo entra solo en la siguiente apertura.
+function staleWhileRevalidate(request, cacheName) {
+  return caches.open(cacheName).then((cache) => {
+    return cache.match(request, MATCH_OPTS).then((cached) => {
+      const red = fetch(request).then((res) => {
+        if (res && res.status === 200) cache.put(request, res.clone());
+        return res;
+      }).catch(() => cached);
+      return cached || red;
+    });
+  });
+}
+
 self.addEventListener('fetch', (event) => {
-  // Navigation requests: Network first falling back to cache
-  if (event.request.mode === 'navigate') {
+  const { request } = event;
+
+  // Solo GET: el resto se deja pasar tal cual.
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  // Fuentes de Google: caché primero, y se guardan aunque la respuesta sea
+  // opaca. Sin esto la tipografía se caía a la del sistema sin conexión.
+  if (esFuente(url)) {
     event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match('./index.html');
-      })
+      caches.open(FONT_CACHE).then((cache) =>
+        cache.match(request, MATCH_OPTS).then((cached) => cached || fetch(request).then((res) => {
+          if (res && (res.status === 200 || res.type === 'opaque')) {
+            cache.put(request, res.clone());
+          }
+          return res;
+        }))
+      ).catch(() => fetch(request))
     );
     return;
   }
 
-  // Data / Static assets: Cache first falling back to network
+  // Navegación: red primero (para que un despliegue nuevo llegue enseguida),
+  // guardando copia, y si no hay conexión se sirve el index cacheado.
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((res) => {
+          const copia = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', copia));
+          return res;
+        })
+        .catch(() => caches.match('./index.html', MATCH_OPTS)
+          .then((cached) => cached || caches.match('./', MATCH_OPTS)))
+    );
+    return;
+  }
+
+  // Devocionales: se sirven al instante y se refrescan por detrás.
+  if (url.pathname.endsWith('/data/devotionals.json')) {
+    event.respondWith(staleWhileRevalidate(request, CACHE_NAME));
+    return;
+  }
+
+  // Resto de estáticos (JS y CSS con hash en el nombre, iconos): caché primero.
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        if (
-          !networkResponse ||
-          networkResponse.status !== 200 ||
-          networkResponse.type !== 'basic'
-        ) {
-          return networkResponse;
-        }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return networkResponse;
-      }).catch(() => {
-        // Return offline fallback if applicable
-        if (event.request.url.includes('/data/devotionals.json')) {
-          return caches.match('./data/devotionals.json');
-        }
+    caches.match(request, MATCH_OPTS).then((cached) => {
+      if (cached) return cached;
+      return fetch(request).then((res) => {
+        if (!res || res.status !== 200 || res.type !== 'basic') return res;
+        const copia = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copia));
+        return res;
       });
     })
   );
