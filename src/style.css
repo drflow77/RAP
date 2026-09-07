@@ -1804,3 +1804,479 @@ select.settings-row-value {
 .stack-10 { display: flex; flex-direction: column; gap: 10px; }
 .text-center { text-align: center; }
 .hidden { display: none !important; }
+
+/* ==========================================================================
+   12. Escritorio y tablet
+   El móvil es la base y no cambia: todo lo de aquí abajo vive dentro de media
+   queries. Tres tamaños:
+     · < 900px   teléfono — barra inferior y un paso RAP a la vez (lo de siempre)
+     · ≥ 900px   portátil — barra lateral, y R, A y P visibles a la vez
+     · ≥ 1280px  monitor  — se abre el riel derecho y la lectura queda acotada
+   ========================================================================== */
+
+/* La barra lateral y el riel solo existen en pantallas grandes */
+.app-side,
+.rail-only {
+  display: none;
+}
+
+.step-tag {
+  display: none;
+}
+
+/* ── Teléfono: un solo paso visible, como hasta ahora ── */
+@media (max-width: 899px) {
+  .today-grid[data-active-step="1"] .rap-step:not([data-step="1"]),
+  .today-grid[data-active-step="2"] .rap-step:not([data-step="2"]),
+  .today-grid[data-active-step="3"] .rap-step:not([data-step="3"]) {
+    display: none;
+  }
+
+  /* La cita del mes acompaña al paso R, igual que antes del rediseño */
+  .today-grid:not([data-active-step="1"]) .rail-memory {
+    display: none;
+  }
+
+  .today-rail {
+    margin-top: 14px;
+  }
+}
+
+/* ── Portátil y tablet en horizontal ── */
+@media (min-width: 900px) {
+  .app-container {
+    max-width: none;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .app-side {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex: none;
+    width: 264px;
+    padding: 20px 16px calc(18px + var(--safe-bottom));
+    border-right: 1px solid var(--line);
+    background: var(--bg2);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+  }
+
+  .app-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* En escritorio manda la barra lateral */
+  .bottom-nav,
+  .rap-steps-bar {
+    display: none;
+  }
+
+  /* El logo y la racha ya están en la barra lateral */
+  .app-header .brand-logo,
+  .app-header .streak-pill {
+    display: none;
+  }
+
+  .app-header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 28px;
+  }
+
+  .header-inner {
+    gap: 20px;
+  }
+
+  /* El saludo ocupa lo suyo y la fecha queda centrada en el hueco restante */
+  .app-header .brand-section {
+    flex: 0 1 auto;
+  }
+
+  .app-header .date-nav-bar {
+    margin-inline: auto;
+    min-width: 280px;
+  }
+
+  .main-view {
+    padding: 20px 28px 48px;
+    gap: 18px;
+  }
+
+  /* Los tres pasos a la vez, cada uno con su rótulo */
+  .today-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .step-tag {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 9px;
+    padding-left: 2px;
+  }
+
+  .step-tag-badge {
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--accSoft);
+    border: 1px solid var(--line);
+    color: var(--acc);
+    font: 700 0.5938rem var(--font-sans);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .step-tag-text {
+    font: 600 0.625rem var(--font-sans);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+
+  /* La prosa justificada se vuelve ilegible si la línea se estira.
+     Se excluye .today-grid: esa la acota su propia columna, y caparla aquí
+     dejaba la lectura en 390px al abrirse el riel. */
+  .main-view > .stack-14,
+  .main-view > div:not(.today-grid) {
+    max-width: 760px;
+  }
+
+  .today-grid {
+    max-width: 760px;
+  }
+
+  .today-rail {
+    margin-top: 4px;
+  }
+}
+
+/* ── Monitor: se abre el riel derecho ── */
+@media (min-width: 1280px) {
+  .today-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 348px;
+    gap: 22px;
+    align-items: start;
+  }
+
+  .today-grid {
+    max-width: none;
+  }
+
+  .today-main {
+    max-width: 700px;
+  }
+
+  .today-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 0;
+    position: sticky;
+    top: 92px;
+  }
+
+  .rail-only {
+    display: block;
+  }
+
+  .main-view {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* ── Piezas de la barra lateral ── */
+.side-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 4px 6px 0;
+}
+
+.side-logo {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  background-color: var(--acc);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.side-brand-copy {
+  min-width: 0;
+}
+
+.side-wordmark {
+  font: 500 0.9375rem/1.2 var(--font-serif);
+  color: var(--ink);
+}
+
+.side-tagline {
+  font: 600 0.5313rem/1.4 var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.side-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--ink2);
+  font: 600 0.8125rem var(--font-sans);
+  text-align: left;
+  transition: background .15s ease, color .15s ease;
+}
+
+.side-nav-item:hover {
+  background: var(--surf);
+  color: var(--ink);
+}
+
+.side-nav-item.active {
+  background: var(--accSoft);
+  border-color: var(--line);
+  color: var(--acc);
+}
+
+.side-streak {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border-radius: 15px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.side-streak-num {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--accSoft);
+  border: 1.5px solid var(--acc);
+  color: var(--acc);
+  font: 700 0.875rem var(--font-sans);
+}
+
+.side-streak-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.side-streak-label {
+  font: 600 0.5313rem var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.side-streak-days {
+  font: 600 0.75rem var(--font-sans);
+  color: var(--ink);
+}
+
+.side-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.side-foot-label {
+  font: 600 0.5313rem var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding-left: 6px;
+}
+
+.side-themes {
+  display: flex;
+  gap: 7px;
+  padding-left: 4px;
+}
+
+.side-theme {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 1.5px solid transparent;
+}
+
+.side-theme span {
+  width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  display: block;
+}
+
+.side-theme.active {
+  border-color: var(--acc);
+}
+
+.side-settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  color: var(--ink2);
+  font: 600 0.75rem var(--font-sans);
+}
+
+.side-settings:hover {
+  color: var(--ink);
+}
+
+/* ── Tarjetas del riel ── */
+.rail-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
+.rail-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 11px;
+}
+
+.rail-card-title {
+  font: 600 0.625rem var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.rail-empty {
+  font: 400 0.75rem/1.6 var(--font-sans);
+  color: var(--ink3);
+}
+
+.rail-answered-item {
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+
+.rail-answered-item:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.rail-answered-text {
+  font: 400 0.8125rem/1.5 var(--font-serif);
+  color: var(--ink);
+}
+
+.rail-answered-date {
+  font: 500 0.625rem var(--font-sans);
+  color: var(--ink3);
+}
+
+/* ── Portada en pantallas grandes ──
+   En móvil es una columna anclada abajo; en escritorio se centra y crece,
+   para que no quede una tarjeta de teléfono perdida en medio del monitor. */
+@media (min-width: 900px) {
+  .welcome-overlay {
+    justify-content: center;
+    padding: 56px 40px;
+  }
+
+  .welcome-inner {
+    max-width: 660px;
+    align-items: center;
+    text-align: center;
+    gap: 26px;
+  }
+
+  .welcome-logo {
+    width: 164px;
+    height: 164px;
+  }
+
+  .welcome-eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: .3em;
+  }
+
+  .welcome-headline {
+    font-size: 3.25rem;
+    line-height: 1.08;
+    margin-top: 10px;
+  }
+
+  .welcome-card {
+    width: 100%;
+    padding: 26px 28px;
+    text-align: left;
+  }
+
+  .welcome-verse {
+    font-size: 1.4375rem;
+    line-height: 1.5;
+  }
+
+  .cta-btn {
+    align-self: center;
+    min-width: 300px;
+  }
+
+  .year-dots {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1280px) {
+  .welcome-inner {
+    max-width: 760px;
+  }
+
+  .welcome-logo {
+    width: 190px;
+    height: 190px;
+  }
+
+  .welcome-headline {
+    font-size: 3.75rem;
+  }
+}

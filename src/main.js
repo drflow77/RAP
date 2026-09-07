@@ -6,6 +6,7 @@ import { devotionalService } from './services/devotionalService.js';
 import { notificationService } from './services/notificationService.js';
 
 import { renderHeader } from './components/Header.js';
+import { renderSidebar } from './components/Sidebar.js';
 import { renderDevotionalCard } from './components/DevotionalCard.js';
 import { renderThreePeoplePray } from './components/ThreePeoplePray.js';
 import { renderPersonalPrayer } from './components/PersonalPrayer.js';
@@ -17,6 +18,7 @@ import { renderInstallBanner } from './components/InstallBanner.js';
 import { renderMonthlyMemoryVerse } from './components/MonthlyMemoryVerse.js';
 import { renderWelcomeMemoryModal } from './components/WelcomeMemoryModal.js';
 import { icons } from './components/icons.js';
+import { esc } from './components/escape.js';
 
 // En desarrollo el service worker cachearía los módulos de Vite y serviría
 // versiones obsoletas tras cada cambio. Se limpia aquí arriba, antes de
@@ -55,6 +57,10 @@ storage.saveSettings({
 });
 
 const appRoot = document.getElementById('app');
+
+// Punto de corte de escritorio. Solo dispara al cruzarlo, no en cada resize.
+const DESKTOP_MQ = window.matchMedia('(min-width: 900px)');
+DESKTOP_MQ.addEventListener('change', () => renderApp());
 
 function getDateString(dateObj) {
   const y = dateObj.getFullYear();
@@ -153,7 +159,18 @@ function renderTodayControls(mainView) {
     renderApp();
   });
 
-  mainView.appendChild(dateBar);
+  // En escritorio la barra de fecha se integra en la cabecera, junto al saludo.
+  // En móvil se queda donde siempre: apretarla en la fila del saludo dejaba
+  // sin sitio al nombre y a la racha.
+  const headerInner = DESKTOP_MQ.matches
+    ? document.querySelector('.app-header .header-inner')
+    : null;
+
+  if (headerInner) {
+    headerInner.insertBefore(dateBar, headerInner.querySelector('.header-actions'));
+  } else {
+    mainView.appendChild(dateBar);
+  }
 
   const steps = [
     { n: 1, letter: 'R', label: 'Relación' },
@@ -180,6 +197,53 @@ function renderTodayControls(mainView) {
   mainView.appendChild(stepsBar);
 }
 
+// Rótulo del paso RAP. Solo se muestra en escritorio: en móvil esa
+// información ya la da la barra de pasos.
+function makeStepTag(letra, texto) {
+  const tag = document.createElement('div');
+  tag.className = 'step-tag';
+  tag.innerHTML = `<span class="step-tag-badge">Paso ${esc(letra)}</span><span class="step-tag-text">${esc(texto)}</span>`;
+  return tag;
+}
+
+// Últimas respondidas, en versión corta para el riel de escritorio.
+function renderRailAnswered(container) {
+  const list = storage.getAnsweredPrayers()
+    .slice()
+    .sort((a, b) => String(b.answeredDate || '').localeCompare(String(a.answeredDate || '')))
+    .slice(0, 3);
+
+  const fecha = (iso) => {
+    if (!iso) return '';
+    const d = new Date(`${iso}T00:00:00`);
+    return Number.isNaN(d.getTime())
+      ? ''
+      : d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  container.innerHTML = `
+    <div class="rail-card">
+      <div class="rail-card-head">
+        <span class="rail-card-title">Respondidas</span>
+        <button class="link-btn" id="rail-see-all">Ver todas</button>
+      </div>
+      ${list.length === 0 ? `
+        <p class="rail-empty">Cuando Dios responda una oración, anótala aquí.</p>
+      ` : list.map((item) => `
+        <div class="rail-answered-item">
+          <p class="rail-answered-text">${esc(item.title || item.request || '')}</p>
+          <span class="rail-answered-date">${esc(fecha(item.answeredDate))}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  container.querySelector('#rail-see-all')?.addEventListener('click', () => {
+    appState.currentTab = 'answered';
+    renderApp();
+  });
+}
+
 function saveEntry(updated) {
   appState.dailyEntry = updated;
   storage.saveDailyEntry(getDateString(appState.currentDate), updated);
@@ -188,6 +252,34 @@ function saveEntry(updated) {
 // Main Render Function
 async function renderApp() {
   appRoot.innerHTML = '';
+
+  // 0. Barra lateral (solo visible en escritorio, la oculta el CSS en móvil)
+  const sidebarContainer = document.createElement('div');
+  renderSidebar(sidebarContainer, {
+    currentTab: appState.currentTab,
+    streakInfo: appState.streakInfo,
+    theme: appState.settings.theme,
+    logoUrl: `${import.meta.env.BASE_URL}brand/logo-faa.png`,
+    onSelectTab: (tab) => {
+      appState.currentTab = tab;
+      renderApp();
+    },
+    onOpenSettings: () => {
+      appState.isSettingsOpen = true;
+      renderApp();
+    },
+    onThemeChange: (key) => {
+      setTheme(key);
+      appState.settings = storage.getSettings();
+      renderApp();
+    }
+  });
+  appRoot.appendChild(sidebarContainer);
+
+  // Columna de contenido: cabecera + vista + barra inferior
+  const appCol = document.createElement('div');
+  appCol.className = 'app-col';
+  appRoot.appendChild(appCol);
 
   // 1. Header
   const headerContainer = document.createElement('div');
@@ -203,7 +295,7 @@ async function renderApp() {
       renderApp();
     }
   });
-  appRoot.appendChild(headerContainer);
+  appCol.appendChild(headerContainer);
 
   // 2. Vista principal
   const mainView = document.createElement('main');
@@ -216,35 +308,55 @@ async function renderApp() {
 
     renderTodayControls(mainView);
 
-    if (appState.activeRapStep === 1) {
-      const stepR = document.createElement('div');
-      stepR.className = 'stack-14 view-enter';
+    // Los tres pasos se montan siempre. En móvil el CSS deja visible solo el
+    // activo (data-active-step), igual que antes; en escritorio, donde sí hay
+    // sitio, se ven R, A y P a la vez y la barra de pasos se oculta.
+    const todayGrid = document.createElement('div');
+    todayGrid.className = 'today-grid view-enter';
+    todayGrid.dataset.activeStep = String(appState.activeRapStep);
+
+    const todayMain = document.createElement('div');
+    todayMain.className = 'today-main';
+
+    const todayRail = document.createElement('aside');
+    todayRail.className = 'today-rail';
+
+    {
+      const stepR = document.createElement('section');
+      stepR.className = 'rap-step';
+      stepR.dataset.step = '1';
+      stepR.appendChild(makeStepTag('R', 'Relación con Dios'));
 
       const devContainer = document.createElement('div');
       renderDevotionalCard(devContainer, appState.currentDevotional);
       stepR.appendChild(devContainer);
 
-      const memoryVerseContainer = document.createElement('div');
-      renderMonthlyMemoryVerse(memoryVerseContainer, {
-        currentDate: appState.currentDate,
-        onMemorizedToggle: (memorized) => {
-          if (memorized) fireCelebration();
-        }
-      });
-      stepR.appendChild(memoryVerseContainer);
+      todayMain.appendChild(stepR);
+    }
 
-      mainView.appendChild(stepR);
+    {
+      const stepA = document.createElement('section');
+      stepA.className = 'rap-step';
+      stepA.dataset.step = '2';
+      stepA.appendChild(makeStepTag('A', 'Tres personas'));
 
-    } else if (appState.activeRapStep === 2) {
       const peopleContainer = document.createElement('div');
       renderThreePeoplePray(peopleContainer, {
         dailyEntry: appState.dailyEntry,
         frequentPeople: storage.getFrequentPeople(),
         onUpdateEntry: saveEntry
       });
-      mainView.appendChild(peopleContainer);
+      stepA.appendChild(peopleContainer);
 
-    } else {
+      todayMain.appendChild(stepA);
+    }
+
+    {
+      const stepP = document.createElement('section');
+      stepP.className = 'rap-step';
+      stepP.dataset.step = '3';
+      stepP.appendChild(makeStepTag('P', 'Tu petición'));
+
       const prayerContainer = document.createElement('div');
       renderPersonalPrayer(prayerContainer, {
         dailyEntry: appState.dailyEntry,
@@ -266,8 +378,44 @@ async function renderApp() {
           renderApp();
         }
       });
-      mainView.appendChild(prayerContainer);
+      stepP.appendChild(prayerContainer);
+
+      todayMain.appendChild(stepP);
     }
+
+    // Riel lateral. La cita del mes acompaña al paso R como siempre; el
+    // calendario y las respondidas solo aparecen en pantallas anchas, donde
+    // sobra espacio a la derecha de la columna de lectura.
+    const memoryVerseContainer = document.createElement('div');
+    memoryVerseContainer.className = 'rail-memory';
+    renderMonthlyMemoryVerse(memoryVerseContainer, {
+      currentDate: appState.currentDate,
+      onMemorizedToggle: (memorized) => {
+        if (memorized) fireCelebration();
+      }
+    });
+    todayRail.appendChild(memoryVerseContainer);
+
+    const railStreak = document.createElement('div');
+    railStreak.className = 'rail-only';
+    renderStreakCalendar(railStreak, {
+      selectedDate: appState.currentDate,
+      onSelectDate: async (date) => {
+        appState.currentDate = date;
+        await loadCurrentDateData();
+        renderApp();
+      }
+    });
+    todayRail.appendChild(railStreak);
+
+    const railAnswered = document.createElement('div');
+    railAnswered.className = 'rail-only';
+    renderRailAnswered(railAnswered);
+    todayRail.appendChild(railAnswered);
+
+    todayGrid.appendChild(todayMain);
+    todayGrid.appendChild(todayRail);
+    mainView.appendChild(todayGrid);
 
   } else if (appState.currentTab === 'answered') {
     const answeredContainer = document.createElement('div');
@@ -302,7 +450,7 @@ async function renderApp() {
     mainView.appendChild(exploreContainer);
   }
 
-  appRoot.appendChild(mainView);
+  appCol.appendChild(mainView);
 
   // 3. Hoja de ajustes
   const modalContainer = document.createElement('div');
@@ -334,7 +482,7 @@ async function renderApp() {
   }
 
   // 5. Navegación inferior
-  appRoot.appendChild(renderBottomNav());
+  appCol.appendChild(renderBottomNav());
 }
 
 // Daily Notification Scheduler in Background
