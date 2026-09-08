@@ -11,9 +11,13 @@
 [data-theme="bosque"] {
   --bg: #0A1512;
   --bg2: #0F1F1A;
-  --surf: rgba(255, 255, 255, .045);
-  --surf2: rgba(255, 255, 255, .075);
-  --line: rgba(255, 255, 255, .10);
+  /* Superficies casi neutras sobre un fondo con tinte, que es lo que hace
+     legible al tema marfil: allí la tarjeta es blanco puro sobre crema. Con
+     el velo translúcido anterior la tarjeta salía MÁS verde que el fondo, y
+     sin cambio de tono el ojo no encuentra el borde: verde sobre verde. */
+  --surf: #222826;
+  --surf2: #2D3331;
+  --line: rgba(255, 255, 255, .16);
   --ink: #EDF3EF;
   --ink2: #9DB3A9;
   --ink3: #69837A;
@@ -27,9 +31,10 @@
 [data-theme="azul"] {
   --bg: #081426;
   --bg2: #0D1F38;
-  --surf: rgba(255, 255, 255, .05);
-  --surf2: rgba(255, 255, 255, .085);
-  --line: rgba(255, 255, 255, .11);
+  /* Mismo criterio: el fondo es muy azul (croma 30), la tarjeta va neutra */
+  --surf: #21262E;
+  --surf2: #2C323B;
+  --line: rgba(255, 255, 255, .16);
   --ink: #EDF3FA;
   --ink2: #9FB4CC;
   --ink3: #6B819B;

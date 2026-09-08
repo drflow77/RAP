@@ -29,7 +29,8 @@ export const CONFETTI_PALETTES = {
 export const TEXT_SCALES = [
   { value: 1, label: 'Normal' },
   { value: 1.15, label: 'Grande' },
-  { value: 1.3, label: 'Muy grande' }
+  { value: 1.3, label: 'Muy grande' },
+  { value: 1.45, label: 'Enorme' }
 ];
 
 export function normalizeTextScale(scale) {
