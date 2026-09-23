@@ -120,6 +120,12 @@ html {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
+  /* Android infla el texto por su cuenta ("font boosting") además de nuestra
+     escala, sobre todo en bloques angostos (badge del logo, barra inferior).
+     iOS no lo hace; por eso allí se veía bien. Lo desactivamos y dejamos que
+     --text-scale sea la única escala. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -266,7 +272,10 @@ button:active {
   color: var(--accInk);
   display: grid;
   place-items: center;
-  font: 800 0.8125rem var(--font-sans);
+  overflow: hidden;
+  /* En px, no en rem: es un badge de tamaño fijo (como .welcome-logo), no
+     debe crecer con --text-scale ni desbordar su caja de 38px. */
+  font: 800 13px var(--font-sans);
   letter-spacing: .04em;
 }
 
@@ -1494,10 +1503,10 @@ button:active {
   font: 600 0.7812rem var(--font-sans);
 }
 
-input.settings-row-value,
-select.settings-row-value {
-  direction: rtl;
-}
+/* Ojo: nada de direction:rtl aquí. En un <input type=text> eso no solo alinea
+   a la derecha (para eso ya está text-align en .settings-row-value): cambia
+   el orden en que Android inserta los caracteres al escribir, y el nombre
+   queda al revés. */
 
 select.settings-row-value {
   appearance: none;
@@ -1729,6 +1738,7 @@ select.settings-row-value {
 }
 
 .nav-item {
+  min-width: 0; /* si no, la columna de grid crece con el texto y desborda la barra */
   border: none;
   background: transparent;
   color: var(--ink3);
@@ -1744,6 +1754,10 @@ select.settings-row-value {
 }
 
 .nav-item span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: 700 0.5938rem var(--font-sans);
   letter-spacing: .04em;
 }
