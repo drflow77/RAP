@@ -19,7 +19,6 @@ export function renderHeader(container, { streakInfo, userName, onOpenStreak, on
           <div class="brand-logo">RAP</div>
           <div class="brand-copy">
             <div class="brand-title">${name ? `${greeting}, ${esc(name)}` : greeting}</div>
-            <div class="brand-subtitle">Tu tiempo de oración</div>
           </div>
         </div>
 

@@ -295,17 +295,6 @@ button:active {
   text-overflow: ellipsis;
 }
 
-.brand-subtitle {
-  /* line-height > 1: evita que overflow:hidden recorte las tildes en mayúsculas */
-  font: 600 0.5938rem/1.3 var(--font-sans);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--ink3);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .header-actions {
   display: flex;
   gap: 8px;
