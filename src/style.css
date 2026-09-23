@@ -1410,6 +1410,7 @@ button:active {
 
 .theme-swatch {
   flex: 1;
+  min-width: 0; /* si no, la etiqueta ("Lavanda"...) sin partirse ensancha la fila entera */
   padding: 9px 4px 10px;
   border-radius: 14px;
   background: transparent;
@@ -1439,6 +1440,7 @@ button:active {
 
 .text-scale-option {
   flex: 1;
+  min-width: 0; /* mismo motivo que .theme-swatch */
   padding: 9px 4px 10px;
   border-radius: 14px;
   background: transparent;
@@ -1468,10 +1470,18 @@ button:active {
 }
 
 .text-scale-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: 600 0.625rem var(--font-sans);
 }
 
 .theme-swatch-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: 600 0.625rem var(--font-sans);
   color: var(--ink3);
 }
@@ -1564,8 +1574,11 @@ select.settings-row-value {
 
 .settings-actions .ghost-btn {
   flex: 1;
+  min-width: 0; /* si no, "Probar aviso" sin partirse fuerza el ancho de toda la hoja */
   justify-content: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 8px 10px;
 }
 
@@ -1730,7 +1743,7 @@ select.settings-row-value {
      dejaba la barra flotando muy arriba en iPhone y en Android con gestos. */
   padding: 11px 14px max(14px, var(--safe-bottom));
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* el minmax(0,...) es el que de verdad deja encoger la columna */
   gap: 4px;
   background: linear-gradient(180deg, transparent, var(--bg) 32%);
   backdrop-filter: blur(14px);
