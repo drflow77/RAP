@@ -313,16 +313,6 @@ button:active {
   font: 700 0.75rem var(--font-sans);
 }
 
-.icon-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: var(--surf);
-  border: 1px solid var(--line);
-  color: var(--ink2);
-  display: grid;
-  place-items: center;
-}
 
 /* --------------------------------------------------------------------------
    5. Navegador de fecha
@@ -1732,7 +1722,7 @@ select.settings-row-value {
      dejaba la barra flotando muy arriba en iPhone y en Android con gestos. */
   padding: 11px 14px max(14px, var(--safe-bottom));
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr)); /* el minmax(0,...) es el que de verdad deja encoger la columna */
+  grid-template-columns: repeat(5, minmax(0, 1fr)); /* el minmax(0,...) es el que de verdad deja encoger la columna */
   gap: 4px;
   background: linear-gradient(180deg, transparent, var(--bg) 32%);
   backdrop-filter: blur(14px);
@@ -1749,6 +1739,14 @@ select.settings-row-value {
   align-items: center;
   gap: 5px;
   padding: 6px 0;
+}
+
+.nav-item svg {
+  /* Los íconos del menú miden 19x19 salvo el de Ajustes (15x15, pensado para
+     el botón redondo que tenía en el encabezado): se fuerza aquí para que
+     los cinco se vean del mismo tamaño. */
+  width: 19px;
+  height: 19px;
 }
 
 .nav-item.active {

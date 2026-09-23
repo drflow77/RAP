@@ -1,4 +1,5 @@
-// Header Component — logo, saludo, píldora de racha y ajustes (persistente en todas las pestañas)
+// Header Component — logo, saludo y píldora de racha (persistente en todas las pestañas)
+// Ajustes vive en el menú inferior (móvil) y en la barra lateral (escritorio).
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 
@@ -8,7 +9,7 @@ function greetingForHour(hour) {
   return 'Buenas noches';
 }
 
-export function renderHeader(container, { streakInfo, userName, onOpenStreak, onOpenSettings }) {
+export function renderHeader(container, { streakInfo, userName, onOpenStreak }) {
   const greeting = greetingForHour(new Date().getHours());
   const name = (userName || '').trim();
 
@@ -27,15 +28,10 @@ export function renderHeader(container, { streakInfo, userName, onOpenStreak, on
             ${icons.flame}
             <span>${esc(streakInfo.currentStreak)}</span>
           </button>
-
-          <button id="btn-settings" class="icon-btn" title="Ajustes" aria-label="Ajustes">
-            ${icons.gear}
-          </button>
         </div>
       </div>
     </header>
   `;
 
   container.querySelector('#btn-streak')?.addEventListener('click', onOpenStreak);
-  container.querySelector('#btn-settings')?.addEventListener('click', onOpenSettings);
 }

@@ -103,7 +103,8 @@ function renderBottomNav() {
     { key: 'today', label: 'Hoy', icon: icons.book },
     { key: 'answered', label: 'Respondidas', icon: icons.starOutline },
     { key: 'streak', label: 'Racha', icon: icons.calendar },
-    { key: 'explore', label: '365 Días', icon: icons.grid }
+    { key: 'explore', label: '365 Días', icon: icons.grid },
+    { key: 'settings', label: 'Ajustes', icon: icons.gear }
   ];
 
   const navEl = document.createElement('nav');
@@ -117,7 +118,13 @@ function renderBottomNav() {
 
   navEl.querySelectorAll('.nav-item').forEach((btn) => {
     btn.addEventListener('click', () => {
-      appState.currentTab = btn.getAttribute('data-tab');
+      const key = btn.getAttribute('data-tab');
+      // Ajustes abre la hoja modal; no es una pestaña de contenido como las demás.
+      if (key === 'settings') {
+        appState.isSettingsOpen = true;
+      } else {
+        appState.currentTab = key;
+      }
       renderApp();
     });
   });
@@ -288,10 +295,6 @@ async function renderApp() {
     userName: appState.settings.userName,
     onOpenStreak: () => {
       appState.currentTab = 'streak';
-      renderApp();
-    },
-    onOpenSettings: () => {
-      appState.isSettingsOpen = true;
       renderApp();
     }
   });
