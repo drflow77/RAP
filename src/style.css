@@ -2250,7 +2250,10 @@ select.settings-row-value {
    para que no quede una tarjeta de teléfono perdida en medio del monitor. */
 @media (min-width: 900px) {
   .welcome-overlay {
-    justify-content: center;
+    /* "safe" hace que, si con letra grande el contenido no cabe, se ancle
+       arriba en vez de centrar y recortar por arriba un trozo (el logo) que
+       el scroll ya no puede alcanzar hacia arriba. */
+    justify-content: safe center;
     padding: 56px 40px;
   }
 
