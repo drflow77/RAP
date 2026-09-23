@@ -1584,7 +1584,11 @@ select.settings-row-value {
   justify-content: flex-end;
   padding: calc(34px + var(--safe-top)) 26px calc(40px + var(--safe-bottom));
   animation: rise .4s ease both;
-  overflow-y: auto;
+  /* El scroll NO va aquí: Android no siempre deja hacer scroll táctil dentro
+     de un elemento que sea a la vez position:fixed y overflow-y:auto. Se
+     mueve a .welcome-inner (fixed sin scroll propio + hijo no-fixed que sí
+     scrollea), el mismo patrón que ya usa la hoja de Ajustes y que en
+     Android sí funciona. */
 }
 
 .welcome-overlay::before {
@@ -1603,6 +1607,9 @@ select.settings-row-value {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  min-height: 0; /* si no, un flex item no se encoge por debajo de su contenido y nunca llega a necesitar scroll propio */
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .welcome-brand {
