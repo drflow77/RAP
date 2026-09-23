@@ -483,6 +483,13 @@ async function renderApp() {
 
   // 5. Navegación inferior
   appCol.appendChild(renderBottomNav());
+
+  // Con la portada o Ajustes abiertos, de fondo queda toda la app (más alta
+  // que una pantalla) debajo de un overlay fixed con su propio scroll. En
+  // iOS el gesto va al overlay sin más; en Android compite con el del body y
+  // el overlay se queda sin poder moverse. Bloquear el body mientras hay un
+  // overlay abierto se lo evita.
+  document.body.style.overflow = (appState.isWelcomeOpen || appState.isSettingsOpen) ? 'hidden' : '';
 }
 
 // Daily Notification Scheduler in Background
