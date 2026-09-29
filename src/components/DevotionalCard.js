@@ -57,6 +57,13 @@ export function renderDevotionalCard(container, devotional) {
           <p class="prayer-text">“${esc(devotional.prayer)}”</p>
         </div>` : ''}
 
+        ${devotional.closingDeclaration ? `
+        <div class="closing-box">
+          <span class="closing-label">${icons.star} Declaración final</span>
+          <p class="closing-text">“${esc(devotional.closingDeclaration)}”</p>
+          ${devotional.closingPassage ? `<span class="closing-passage">${esc(devotional.closingPassage)}</span>` : ''}
+        </div>` : ''}
+
         <div class="card-footer-actions">
           <button id="btn-audio-listen" class="action-pill-btn ${isSpeaking ? 'active' : ''}">
             ${icons.speaker}
@@ -101,6 +108,7 @@ export function renderDevotionalCard(container, devotional) {
       devotional.declaration ? `Declaro hoy: ${devotional.declaration}` : null,
       devotional.prayerPrompt ? `Para escribir: ${devotional.prayerPrompt}` : null,
       devotional.prayer ? `Oración: “${devotional.prayer}”` : null,
+      devotional.closingDeclaration ? `Declaración final: “${devotional.closingDeclaration}” (${devotional.closingPassage})` : null,
       '“Nunca estás demasiado ocupado para no orar.”'
     ].filter(Boolean).join('\n\n');
 

@@ -68,9 +68,9 @@ export const MONTHLY_MEMORY_VERSES = [
   {
     month: 10,
     monthName: "Octubre",
-    theme: "El Fruto del Espíritu",
-    passage: "Gálatas 5:22-23",
-    verse: "Mas el fruto del Espíritu es amor, gozo, paz, paciencia, benignidad, bondad, fe, mansedumbre, templanza; contra tales cosas no hay ley."
+    theme: "Luz en medio de las tinieblas",
+    passage: "Juan 8:12",
+    verse: "Otra vez Jesús les habló, diciendo: Yo soy la luz del mundo; el que me sigue, no andará en tinieblas, sino que tendrá la luz de la vida."
   },
   {
     month: 11,

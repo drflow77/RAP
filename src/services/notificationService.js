@@ -61,7 +61,8 @@ export const notificationService = {
       devotional.reflection ? `Reflexión: ${devotional.reflection}` : null,
       devotional.declaration ? `Declaración de fe: ${devotional.declaration}` : null,
       devotional.prayerPrompt ? `Para escribir: ${devotional.prayerPrompt}` : null,
-      devotional.prayer ? `Oración: ${devotional.prayer}` : null
+      devotional.prayer ? `Oración: ${devotional.prayer}` : null,
+      devotional.closingDeclaration ? `Declaración final: ${devotional.closingDeclaration}` : null
     ].filter(Boolean).join(' ');
     const utterance = new SpeechSynthesisUtterance(textToRead);
     utterance.lang = 'es-ES';
