@@ -13,6 +13,7 @@ import { renderPersonalPrayer } from './components/PersonalPrayer.js';
 import { renderAnsweredWall } from './components/AnsweredWall.js';
 import { renderStreakCalendar } from './components/StreakCalendar.js';
 import { renderExploreDevotionals } from './components/ExploreDevotionals.js';
+import { renderBible } from './components/BibleReader.js';
 import { renderSettingsModal } from './components/SettingsModal.js';
 import { renderInstallBanner } from './components/InstallBanner.js';
 import { renderMonthlyMemoryVerse } from './components/MonthlyMemoryVerse.js';
@@ -33,7 +34,8 @@ if (import.meta.env.DEV && 'serviceWorker' in navigator) {
 
 // Application State
 const appState = {
-  currentTab: 'today', // 'today' | 'answered' | 'streak' | 'explore'
+  currentTab: 'today', // 'today' | 'bible' | 'answered' | 'streak' | 'explore'
+  bibleTarget: null, // cita a abrir en la Biblia ("Juan 3:16")
   currentDate: new Date(),
   currentDevotional: null,
   dailyEntry: null,
@@ -97,12 +99,13 @@ function setTheme(themeKey) {
   renderApp();
 }
 
-// Navegación inferior
+// Navegación inferior. Racha no tiene pestaña propia: con Biblia ya no cabían
+// seis en un teléfono, y se abre tocando el contador de la llama del encabezado.
 function renderBottomNav() {
   const tabs = [
     { key: 'today', label: 'Hoy', icon: icons.book },
+    { key: 'bible', label: 'Biblia', icon: icons.bible },
     { key: 'answered', label: 'Respondidas', icon: icons.starOutline },
-    { key: 'streak', label: 'Racha', icon: icons.calendar },
     { key: 'explore', label: '365 Días', icon: icons.grid },
     { key: 'settings', label: 'Ajustes', icon: icons.gear }
   ];
@@ -331,7 +334,13 @@ async function renderApp() {
       stepR.appendChild(makeStepTag('R', 'Relación con Dios'));
 
       const devContainer = document.createElement('div');
-      renderDevotionalCard(devContainer, appState.currentDevotional);
+      renderDevotionalCard(devContainer, appState.currentDevotional, {
+        onOpenPassage: (passage) => {
+          appState.bibleTarget = passage;
+          appState.currentTab = 'bible';
+          renderApp();
+        }
+      });
       stepR.appendChild(devContainer);
 
       todayMain.appendChild(stepR);
@@ -419,6 +428,14 @@ async function renderApp() {
     todayGrid.appendChild(todayMain);
     todayGrid.appendChild(todayRail);
     mainView.appendChild(todayGrid);
+
+  } else if (appState.currentTab === 'bible') {
+    const bibleContainer = document.createElement('div');
+    renderBible(bibleContainer, {
+      target: appState.bibleTarget,
+      onTargetConsumed: () => { appState.bibleTarget = null; }
+    });
+    mainView.appendChild(bibleContainer);
 
   } else if (appState.currentTab === 'answered') {
     const answeredContainer = document.createElement('div');

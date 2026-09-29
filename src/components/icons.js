@@ -20,6 +20,16 @@ export const icons = {
   pen: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.2 2.3a1.6 1.6 0 0 1 2.3 2.3L5.6 12.5l-3 .8.8-3 7.8-8Z"/></svg>`,
   book: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 4.5h5c1.1 0 2 .9 2 2v9c0-1.1-.9-2-2-2h-5v-9ZM16.5 4.5h-5c-1.1 0-2 .9-2 2v9c0-1.1.9-2 2-2h5v-9Z"/></svg>`,
 
+  bible: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5.5 2.8h9.2v14.4H5.5a1.8 1.8 0 0 1-1.8-1.8V4.6c0-1 .8-1.8 1.8-1.8Z" stroke-linejoin="round"/><path d="M3.7 15.4c0-1 .8-1.8 1.8-1.8h9.2M9.6 5.6v5.2M7.6 7.4h4"/></svg>`,
+
+  bookmark: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 1.8h7v10.4L7 9.8l-3.5 2.4V1.8Z" stroke-linejoin="round"/></svg>`,
+
+  copy: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4.5" y="4.5" width="7.5" height="7.5" rx="1.6"/><path d="M9.5 4.5V3.2c0-.8-.6-1.4-1.4-1.4H3.2c-.8 0-1.4.6-1.4 1.4v4.9c0 .8.6 1.4 1.4 1.4h1.3"/></svg>`,
+
+  close: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg>`,
+
+  external: `<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1.8h3.2V5M10.2 1.8 5.6 6.4M9 7.4v2c0 .5-.4.8-.8.8H2.6a.8.8 0 0 1-.8-.8V3.8c0-.5.4-.8.8-.8h2"/></svg>`,
+
   starOutline: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 2.8 2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 8.1l5-.7L10 2.8Z" stroke-linejoin="round"/></svg>`,
 
   calendar: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4.2" width="14" height="13" rx="3"/><path d="M3 8.2h14M7 2.6v2.6M13 2.6v2.6"/></svg>`,

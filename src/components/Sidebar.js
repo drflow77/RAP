@@ -10,6 +10,7 @@ import { THEMES } from '../state/themes.js';
 
 const NAV_ITEMS = [
   { key: 'today', label: 'Hoy', icon: icons.book },
+  { key: 'bible', label: 'Biblia', icon: icons.bible },
   { key: 'answered', label: 'Respondidas', icon: icons.starOutline },
   { key: 'streak', label: 'Racha', icon: icons.calendar },
   { key: 'explore', label: '365 Días', icon: icons.grid }

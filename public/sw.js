@@ -1,6 +1,7 @@
 // Subir la versión invalida la caché anterior al activarse.
 // v3: iconos nuevos, contenido real de septiembre y arreglos de offline.
-const CACHE_NAME = 'rap-app-v3';
+// v4: Biblia Reina-Valera 1909 sin conexión.
+const CACHE_NAME = 'rap-app-v4';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';
@@ -17,7 +18,10 @@ const ASSETS_TO_CACHE = [
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './brand/logo-faa.png',
-  './data/devotionals.json'
+  './data/devotionals.json',
+  // La Biblia pesa unos 4 MB (1.2 MB comprimida). Se guarda al instalar para
+  // que funcione sin conexión aunque nunca se haya abierto la pestaña.
+  './data/biblia/rv1909.json'
 ];
 
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
@@ -120,7 +124,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Resto de estáticos (JS y CSS con hash en el nombre, iconos): caché primero.
+  // Resto de estáticos (JS y CSS con hash en el nombre, iconos, la Biblia):
+  // caché primero. El texto bíblico no cambia; si algún día se corrige, subir
+  // CACHE_NAME lo vuelve a descargar.
   event.respondWith(
     caches.match(request, MATCH_OPTS).then((cached) => {
       if (cached) return cached;

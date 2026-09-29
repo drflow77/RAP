@@ -5,7 +5,17 @@ const STORAGE_KEYS = {
   FREQUENT_PEOPLE: 'rap_frequent_people_v1',
   SETTINGS: 'rap_settings_v1',
   STREAK_INFO: 'rap_streak_info_v1',
-  PERSONAL_PETITIONS: 'rap_personal_petitions_v1'
+  PERSONAL_PETITIONS: 'rap_personal_petitions_v1',
+  BIBLE: 'rap_bible_v1'
+};
+
+// Dónde se quedó leyendo, qué versión usa y los versículos que guardó.
+// Las posiciones son índices: book 0-65, chapter y verse desde 1.
+const DEFAULT_BIBLE = {
+  version: 'rv1909',
+  lastBook: 42, // Juan
+  lastChapter: 1,
+  saved: [] // [{ book, chapter, verse, savedAt }]
 };
 
 const DEFAULT_SETTINGS = {
@@ -213,6 +223,51 @@ export const storage = {
     }
   },
 
+  // --- Biblia ---
+  getBibleState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.BIBLE);
+      return raw ? { ...DEFAULT_BIBLE, ...JSON.parse(raw) } : { ...DEFAULT_BIBLE };
+    } catch (e) {
+      return { ...DEFAULT_BIBLE };
+    }
+  },
+
+  saveBibleState(partial) {
+    try {
+      const merged = { ...this.getBibleState(), ...partial };
+      localStorage.setItem(STORAGE_KEYS.BIBLE, JSON.stringify(merged));
+      return merged;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  isVerseSaved(book, chapter, verse) {
+    return this.getBibleState().saved.some(
+      (s) => s.book === book && s.chapter === chapter && s.verse === verse
+    );
+  },
+
+  // Guarda los versículos indicados; si ya estaban todos guardados, los quita.
+  // Devuelve true si quedaron guardados.
+  toggleSavedVerses(book, chapter, verses) {
+    const state = this.getBibleState();
+    const isSaved = (v) => state.saved.some((s) => s.book === book && s.chapter === chapter && s.verse === v);
+    const allSaved = verses.every(isSaved);
+
+    let saved;
+    if (allSaved) {
+      saved = state.saved.filter((s) => !(s.book === book && s.chapter === chapter && verses.includes(s.verse)));
+    } else {
+      const now = new Date().toISOString();
+      const nuevos = verses.filter((v) => !isSaved(v)).map((verse) => ({ book, chapter, verse, savedAt: now }));
+      saved = [...nuevos, ...state.saved];
+    }
+    this.saveBibleState({ saved });
+    return !allSaved;
+  },
+
   // --- Export & Import Backup ---
   exportBackup() {
     const data = {
@@ -222,7 +277,8 @@ export const storage = {
       answeredPrayers: this.getAnsweredPrayers(),
       frequentPeople: this.getFrequentPeople(),
       streakInfo: this.getStreakInfo(),
-      settings: this.getSettings()
+      settings: this.getSettings(),
+      bible: this.getBibleState()
     };
     return JSON.stringify(data, null, 2);
   },
@@ -235,6 +291,7 @@ export const storage = {
       if (data.frequentPeople) localStorage.setItem(STORAGE_KEYS.FREQUENT_PEOPLE, JSON.stringify(data.frequentPeople));
       if (data.streakInfo) localStorage.setItem(STORAGE_KEYS.STREAK_INFO, JSON.stringify(data.streakInfo));
       if (data.settings) localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(data.settings));
+      if (data.bible) localStorage.setItem(STORAGE_KEYS.BIBLE, JSON.stringify(data.bible));
       return true;
     } catch (e) {
       console.error('Import failed:', e);

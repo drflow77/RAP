@@ -3,7 +3,7 @@ import { notificationService } from '../services/notificationService.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 
-export function renderDevotionalCard(container, devotional) {
+export function renderDevotionalCard(container, devotional, { onOpenPassage } = {}) {
   if (!devotional) {
     container.innerHTML = `
       <div class="rap-card text-center">
@@ -27,6 +27,10 @@ export function renderDevotionalCard(container, devotional) {
         <blockquote class="verse-box">
           <p class="verse-text">“${esc(devotional.verse)}”</p>
           <span class="verse-passage">${esc(devotional.passage)}</span>
+          ${onOpenPassage ? `
+          <button class="verse-open-bible" id="btn-open-passage">
+            ${icons.bible}<span>Leer el capítulo completo</span>
+          </button>` : ''}
         </blockquote>
 
         ${devotional.pending ? `
@@ -77,6 +81,11 @@ export function renderDevotionalCard(container, devotional) {
       </div>
     </div>
   `;
+
+  container.querySelector('#btn-open-passage')?.addEventListener('click', () => {
+    notificationService.stopSpeaking();
+    onOpenPassage(devotional.passage);
+  });
 
   // Audio Reading Handler
   const audioBtn = container.querySelector('#btn-audio-listen');

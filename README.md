@@ -10,6 +10,8 @@ Inspirada en la metodología de oración de Ensancha Guatemala.
 ## Qué incluye
 
 - **365 devocionales**, uno por día del año, con versículo, reflexión y declaración.
+- **Biblia completa** (Reina-Valera 1909, dominio público) sin conexión: libros y capítulos,
+  búsqueda por cita o por palabra, versículos guardados y enlaces para comparar en RV60, NVI y NTV.
 - **Método RAP** en tres pasos, con contactos frecuentes y marca de "ya oré".
 - **12 versículos para memorizar** (uno por mes) con modo práctica.
 - **Racha de constancia** con anillo de progreso y calendario mensual.
@@ -33,6 +35,18 @@ npm run preview  # sirve la build en http://localhost:4173/RAP/
 Vite + JavaScript sin framework. Los componentes viven en `src/components/*.js` y exportan
 funciones `render<X>(container, props)`; todos los estilos están en `src/style.css` sobre
 variables CSS.
+
+## Biblia
+
+El texto vive en `public/data/biblia/<versión>.json` y se genera con
+`node scripts/build-bible.js ruta/a/SpaRV.json` a partir de la Reina-Valera 1909 de
+[scrollmapper/bible_databases](https://github.com/scrollmapper/bible_databases)
+(`formats/json/SpaRV.json`). El script moderniza la ortografía de 1909 ("á" → "a", "fué" → "fue").
+
+Para agregar otra versión (por ejemplo RV1960 o NTV, **solo con licencia** de sus dueños):
+deja su JSON con el mismo formato en `public/data/biblia/` y súmala a `BIBLE_VERSIONS` en
+`src/services/bibleService.js`. El selector de versión aparece solo cuando hay más de una.
+Ojo: este repositorio es público, así que un texto con licencia no debe subirse aquí.
 
 ## Despliegue
 
