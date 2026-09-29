@@ -65,6 +65,18 @@ export function loadVersion(id) {
   return loaded.get(version.id);
 }
 
+// ¿Ya está guardada en el teléfono? La guarda el service worker al instalar
+// la app, así que la marca solo aparece en la versión publicada.
+export async function isVersionOffline(id) {
+  if (!('caches' in window)) return false;
+  try {
+    const url = new URL(`${import.meta.env.BASE_URL}${getVersion(id).file}`, window.location.href).href;
+    return Boolean(await caches.match(url, { ignoreVary: true }));
+  } catch (e) {
+    return false;
+  }
+}
+
 export function getChapter(data, book, chapter) {
   return data.books[book]?.[chapter - 1] || [];
 }

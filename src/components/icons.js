@@ -26,6 +26,8 @@ export const icons = {
 
   copy: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4.5" y="4.5" width="7.5" height="7.5" rx="1.6"/><path d="M9.5 4.5V3.2c0-.8-.6-1.4-1.4-1.4H3.2c-.8 0-1.4.6-1.4 1.4v4.9c0 .8.6 1.4 1.4 1.4h1.3"/></svg>`,
 
+  check: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 6.3 5 8.7l4.5-5"/></svg>`,
+
   close: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg>`,
 
   external: `<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1.8h3.2V5M10.2 1.8 5.6 6.4M9 7.4v2c0 .5-.4.8-.8.8H2.6a.8.8 0 0 1-.8-.8V3.8c0-.5.4-.8.8-.8h2"/></svg>`,

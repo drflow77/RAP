@@ -11,6 +11,7 @@ import {
   EXTERNAL_VERSIONS,
   getVersion,
   loadVersion,
+  isVersionOffline,
   getChapter,
   chapterCount,
   parseReference,
@@ -156,6 +157,7 @@ function drawHome() {
         <div>
           <h2 class="screen-title">Biblia</h2>
           <p class="section-subtitle">${esc(getVersion(state.version).name)}</p>
+          <p class="bible-offline" id="bible-offline" hidden></p>
         </div>
         ${versionBadge()}
       </div>
@@ -190,6 +192,7 @@ function drawHome() {
   `;
 
   bindVersionSelect();
+  showOfflineStatus(state.version);
 
   root.querySelector('#bible-search-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -216,6 +219,31 @@ function drawHome() {
       ui.book = parseInt(btn.getAttribute('data-book'), 10);
       go('chapters');
     });
+  });
+}
+
+// Marca "Disponible sin conexión" cuando el texto ya está guardado en el
+// teléfono. Recién instalada, el service worker puede seguir descargándolo:
+// mientras tanto se avisa y se vuelve a mirar cada pocos segundos.
+function showOfflineStatus(versionId, intentos = 0) {
+  const el = root?.querySelector('#bible-offline');
+  if (!el) return;
+
+  isVersionOffline(versionId).then((ok) => {
+    const actual = root?.querySelector('#bible-offline');
+    if (actual !== el) return; // la vista ya cambió
+
+    if (ok) {
+      el.innerHTML = `${icons.check} Disponible sin conexión`;
+      el.classList.add('ready');
+      el.hidden = false;
+    } else if ('serviceWorker' in navigator && !import.meta.env.DEV && intentos < 20) {
+      el.textContent = 'Guardando en tu teléfono para leer sin conexión…';
+      el.hidden = false;
+      setTimeout(() => showOfflineStatus(versionId, intentos + 1), 3000);
+    } else {
+      el.hidden = true;
+    }
   });
 }
 

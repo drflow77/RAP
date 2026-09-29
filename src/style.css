@@ -1883,6 +1883,23 @@ select.settings-row-value {
   gap: 12px;
 }
 
+.bible-offline {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  font: 600 0.6875rem/1.4 var(--font-sans);
+  color: var(--ink3);
+}
+
+.bible-offline[hidden] {
+  display: none;
+}
+
+.bible-offline.ready {
+  color: var(--ok);
+}
+
 .bible-version-chip {
   flex: none;
   padding: 6px 11px;
