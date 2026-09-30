@@ -101,11 +101,13 @@ function setTheme(themeKey) {
 
 // Navegación inferior. Racha no tiene pestaña propia: con Biblia ya no cabían
 // seis en un teléfono, y se abre tocando el contador de la llama del encabezado.
+// Biblia va al centro, destacada con el ícono de la app.
 function renderBottomNav() {
+  const appIcon = `<img class="nav-center-img" src="${import.meta.env.BASE_URL}icons/icon-192.png" alt="" aria-hidden="true">`;
   const tabs = [
     { key: 'today', label: 'Hoy', icon: icons.book },
-    { key: 'bible', label: 'Biblia', icon: icons.bible },
     { key: 'answered', label: 'Respondidas', icon: icons.starOutline },
+    { key: 'bible', label: 'Biblia', icon: appIcon, center: true },
     { key: 'explore', label: '365 Días', icon: icons.grid },
     { key: 'settings', label: 'Ajustes', icon: icons.gear }
   ];
@@ -113,7 +115,7 @@ function renderBottomNav() {
   const navEl = document.createElement('nav');
   navEl.className = 'bottom-nav';
   navEl.innerHTML = tabs.map((t) => `
-    <button class="nav-item ${appState.currentTab === t.key ? 'active' : ''}" data-tab="${t.key}">
+    <button class="nav-item ${t.center ? 'nav-center' : ''} ${appState.currentTab === t.key ? 'active' : ''}" data-tab="${t.key}">
       ${t.icon}
       <span>${t.label}</span>
     </button>
