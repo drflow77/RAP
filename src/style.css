@@ -1804,12 +1804,13 @@ select.settings-row-value {
   margin-top: -30px;
   border-radius: 50%;
   border: 3px solid var(--bg);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+  /* Brillo azul del aro del logo: la Biblia es el centro de todo */
+  box-shadow: 0 0 16px 3px rgba(94, 182, 240, .45), 0 6px 18px rgba(0, 0, 0, .35);
   transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .nav-center.active .nav-center-img {
-  box-shadow: 0 0 0 2px var(--acc), 0 6px 18px rgba(0, 0, 0, .35);
+  box-shadow: 0 0 0 2px var(--acc), 0 0 16px 3px rgba(94, 182, 240, .45), 0 6px 18px rgba(0, 0, 0, .35);
 }
 
 .nav-center:active .nav-center-img {
