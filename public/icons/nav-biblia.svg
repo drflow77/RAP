@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Botón central "Biblia": la misma marca del aro con la llama, en los
+       colores del canal de YouTube Palabra Vida Abundante. -->
+  <defs>
+    <radialGradient id="fondo" cx="50%" cy="40%" r="65%">
+      <stop offset="0" stop-color="#1E3560"/>
+      <stop offset="1" stop-color="#0D1A34"/>
+    </radialGradient>
+    <linearGradient id="aro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7CCEF7"/>
+      <stop offset="1" stop-color="#3E9EE3"/>
+    </linearGradient>
+    <linearGradient id="llama" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2802A"/>
+      <stop offset="1" stop-color="#FFC45E"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="256" cy="256" r="256" fill="url(#fondo)"/>
+
+  <path d="M256 78.8 A177.2 177.2 0 1 1 130.7 130.7"
+        fill="none" stroke="url(#aro)" stroke-width="32" stroke-linecap="round"/>
+
+  <g transform="translate(256 265.8) scale(21.66) translate(-5.5 -6)">
+    <path d="M5.5 1C6 3.5 9 4 9 7.2A3.6 3.6 0 0 1 5.5 11 3.6 3.6 0 0 1 2 7.2C2 5 3.4 4.4 3.9 3.2c.3 1.2 1.3 1.4 1.6 2.4.5-1.2 0-3.1 0-4.6Z" fill="url(#llama)"/>
+  </g>
+</svg>

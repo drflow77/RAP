@@ -17,6 +17,7 @@ const ASSETS_TO_CACHE = [
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
+  './icons/nav-biblia.svg',
   './brand/logo-faa.png',
   './data/devotionals.json',
   // La Biblia pesa unos 4 MB (1.2 MB comprimida). Se guarda al instalar para

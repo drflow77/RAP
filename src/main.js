@@ -101,9 +101,9 @@ function setTheme(themeKey) {
 
 // Navegación inferior. Racha no tiene pestaña propia: con Biblia ya no cabían
 // seis en un teléfono, y se abre tocando el contador de la llama del encabezado.
-// Biblia va al centro, destacada con el ícono de la app.
+// Biblia va al centro, destacada con el logo del canal Palabra Vida Abundante.
 function renderBottomNav() {
-  const appIcon = `<img class="nav-center-img" src="${import.meta.env.BASE_URL}icons/icon-192.png" alt="" aria-hidden="true">`;
+  const appIcon = `<img class="nav-center-img" src="${import.meta.env.BASE_URL}icons/nav-biblia.svg" alt="" aria-hidden="true">`;
   const tabs = [
     { key: 'today', label: 'Hoy', icon: icons.book },
     { key: 'answered', label: 'Respondidas', icon: icons.starOutline },

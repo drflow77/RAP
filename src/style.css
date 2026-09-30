@@ -1793,7 +1793,7 @@ select.settings-row-value {
   color: var(--acc);
 }
 
-/* Biblia, al centro: el ícono de la app sobresale de la barra */
+/* Biblia, al centro: el logo del canal sobresale de la barra */
 .nav-center {
   padding-top: 0;
 }
@@ -1802,7 +1802,7 @@ select.settings-row-value {
   width: 54px;
   height: 54px;
   margin-top: -30px;
-  border-radius: 17px;
+  border-radius: 50%;
   border: 3px solid var(--bg);
   box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
   transition: transform .15s ease, box-shadow .15s ease;
