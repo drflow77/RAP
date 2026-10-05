@@ -3007,3 +3007,12 @@ select.bible-version-chip {
 .changelog summary { cursor: pointer; color: var(--acc); font-weight: 600; }
 .changelog-entry { margin-top: 8px; }
 .changelog ul { margin: 2px 0 0 16px; padding: 0; list-style: disc; }
+
+.side-nav-logo {
+  width: 26px;
+  height: 26px;
+  margin: -3px 0;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 1px rgba(94, 182, 240, .45);
+}
