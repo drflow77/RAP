@@ -3,6 +3,11 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.1.2',
+    date: '2026-10-05',
+    changes: ['Ajustes: la paleta de color muestra solo los círculos, sin nombres']
+  },
+  {
     version: '1.1.1',
     date: '2026-10-05',
     changes: ['Logo del canal en el botón Biblia de la versión PC']

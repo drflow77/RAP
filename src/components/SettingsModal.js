@@ -38,9 +38,8 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
           </div>
           <div class="theme-swatches">
             ${THEMES.map((t) => `
-              <button class="theme-swatch ${t.key === activeTheme ? 'active' : ''}" data-theme="${t.key}">
+              <button class="theme-swatch ${t.key === activeTheme ? 'active' : ''}" data-theme="${t.key}" aria-label="Tema ${t.label}" title="${t.label}">
                 <span class="theme-swatch-dot" style="background: ${t.swatch}"></span>
-                <span class="theme-swatch-label">${t.label}</span>
               </button>
             `).join('')}
           </div>
