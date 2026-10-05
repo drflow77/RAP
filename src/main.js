@@ -9,7 +9,7 @@ import { readingPlanService } from './services/readingPlanService.js';
 import { renderHeader } from './components/Header.js';
 import { renderSidebar } from './components/Sidebar.js';
 import { renderDevotionalCard } from './components/DevotionalCard.js';
-import { renderReadingPlanCard } from './components/ReadingPlanCard.js';
+import { renderReadingPlanCard, firstChapterOf } from './components/ReadingPlanCard.js';
 import { renderThreePeoplePray } from './components/ThreePeoplePray.js';
 import { renderPersonalPrayer } from './components/PersonalPrayer.js';
 import { renderAnsweredWall } from './components/AnsweredWall.js';
@@ -260,6 +260,13 @@ function renderRailAnswered(container) {
   });
 }
 
+// Abre en la Biblia el primer capítulo de una lectura del plan
+function openReading(reading) {
+  appState.bibleTarget = firstChapterOf(reading);
+  appState.currentTab = 'bible';
+  renderApp();
+}
+
 function saveEntry(updated) {
   appState.dailyEntry = updated;
   storage.saveDailyEntry(getDateString(appState.currentDate), updated);
@@ -276,6 +283,8 @@ async function renderApp() {
     streakInfo: appState.streakInfo,
     theme: appState.settings.theme,
     logoUrl: `${import.meta.env.BASE_URL}brand/logo-faa.png`,
+    readings: appState.currentReadings,
+    onOpenReading: openReading,
     onSelectTab: (tab) => {
       appState.currentTab = tab;
       renderApp();
@@ -352,6 +361,7 @@ async function renderApp() {
       const readingContainer = document.createElement('div');
       renderReadingPlanCard(readingContainer, {
         readings: appState.currentReadings,
+        onOpen: openReading,
         checked: appState.dailyEntry?.readings || [],
         onToggle: (i) => {
           const checked = (appState.dailyEntry.readings || []).slice();

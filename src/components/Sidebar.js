@@ -6,6 +6,7 @@
 // definidos en icons.js y los colores salen de THEMES.
 import { icons } from './icons.js';
 import { esc } from './escape.js';
+import { firstChapterOf } from './ReadingPlanCard.js';
 import { THEMES } from '../state/themes.js';
 
 const NAV_ITEMS = [
@@ -21,6 +22,8 @@ export function renderSidebar(container, {
   streakInfo,
   theme,
   logoUrl,
+  readings,
+  onOpenReading,
   onSelectTab,
   onOpenSettings,
   onThemeChange
@@ -56,6 +59,16 @@ export function renderSidebar(container, {
         </span>
       </button>
 
+      ${readings ? `
+      <div class="side-reading">
+        <span class="side-reading-label">Lectura de hoy</span>
+        ${readings.map((r, i) => `
+          <button class="side-reading-item" data-i="${i}" title="Abrir en la Biblia">
+            <span>${esc(r)}</span><span aria-hidden="true">›</span>
+          </button>
+        `).join('')}
+      </div>` : ''}
+
       <div class="side-foot">
         <span class="side-foot-label">Color de la app</span>
         <div class="side-themes">
@@ -79,6 +92,10 @@ export function renderSidebar(container, {
 
   container.querySelectorAll('.side-nav-item').forEach((btn) => {
     btn.addEventListener('click', () => onSelectTab(btn.getAttribute('data-tab')));
+  });
+
+  container.querySelectorAll('.side-reading-item').forEach((btn) => {
+    btn.addEventListener('click', () => onOpenReading?.(readings[parseInt(btn.dataset.i, 10)]));
   });
 
   container.querySelector('#side-streak')?.addEventListener('click', () => onSelectTab('streak'));
