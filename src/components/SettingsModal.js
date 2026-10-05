@@ -4,6 +4,7 @@ import { notificationService } from '../services/notificationService.js';
 import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale } from '../state/themes.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
+import { CHANGELOG, APP_VERSION } from '../changelog.js';
 
 export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpdated, onThemeChange }) {
   if (!isOpen) {
@@ -127,7 +128,16 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
         </div>
 
         <div class="sheet-footer">
-          <p>Inspirado en la metodología de oración de Ensancha Guatemala.<br>Versión 1.0.0</p>
+          <p>Inspirado en la metodología de oración de Ensancha Guatemala.<br>Versión ${esc(APP_VERSION)}</p>
+          <details class="changelog">
+            <summary>Novedades</summary>
+            ${CHANGELOG.map((c) => `
+              <div class="changelog-entry">
+                <strong>v${esc(c.version)} · ${esc(c.date)}</strong>
+                <ul>${c.changes.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+              </div>
+            `).join('')}
+          </details>
         </div>
       </div>
     </div>

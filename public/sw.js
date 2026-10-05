@@ -2,7 +2,8 @@
 // v3: iconos nuevos, contenido real de septiembre y arreglos de offline.
 // v4: Biblia Reina-Valera 1909 sin conexión.
 // v5: plan de lectura bíblica.
-const CACHE_NAME = 'rap-app-v5';
+// v6: tema Negro y número de versión (1.1.0).
+const CACHE_NAME = 'rap-app-v6';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';
@@ -109,7 +110,7 @@ self.addEventListener('fetch', (event) => {
   // guardando copia, y si no hay conexión se sirve el index cacheado.
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: 'no-cache' })
         .then((res) => {
           const copia = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', copia));

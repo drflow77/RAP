@@ -7,6 +7,7 @@
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { firstChapterOf } from './ReadingPlanCard.js';
+import { APP_VERSION } from '../changelog.js';
 import { THEMES } from '../state/themes.js';
 
 const NAV_ITEMS = [
@@ -84,6 +85,7 @@ export function renderSidebar(container, {
           ${icons.gear}
           <span>Ajustes</span>
         </button>
+        <span class="side-version">v${esc(APP_VERSION)}</span>
       </div>
     </aside>
   `;

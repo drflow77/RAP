@@ -2989,3 +2989,21 @@ select.bible-version-chip {
 
 .side-reading-item:hover { background: var(--accSoft); }
 .side-reading-item span:last-child { color: var(--acc); }
+
+/* Versión y novedades */
+.side-version {
+  padding-left: 6px;
+  font: 500 0.625rem var(--font-sans);
+  color: var(--ink3);
+}
+
+.changelog {
+  margin-top: 10px;
+  text-align: left;
+  font: 400 0.75rem/1.5 var(--font-sans);
+  color: var(--ink2);
+}
+
+.changelog summary { cursor: pointer; color: var(--acc); font-weight: 600; }
+.changelog-entry { margin-top: 8px; }
+.changelog ul { margin: 2px 0 0 16px; padding: 0; list-style: disc; }
