@@ -1,11 +1,12 @@
-// Los 5 temas de color de la app. La clave se persiste en settings.theme.
+// Los 6 temas de color de la app. La clave se persiste en settings.theme.
 
 export const THEMES = [
   { key: 'bosque',  label: 'Bosque',  swatch: '#7FC8A0', mode: 'Oscuro' },
   { key: 'marfil',  label: 'Marfil',  swatch: '#2E5D4B', mode: 'Claro' },
   { key: 'lavanda', label: 'Lavanda', swatch: '#584BA8', mode: 'Claro' },
   { key: 'rosa',    label: 'Rosa',    swatch: '#C4557E', mode: 'Claro' },
-  { key: 'azul',    label: 'Azul',    swatch: '#63B3ED', mode: 'Oscuro' }
+  { key: 'azul',    label: 'Azul',    swatch: '#63B3ED', mode: 'Oscuro' },
+  { key: 'negro',   label: 'Negro',   swatch: '#111111', mode: 'Oscuro' }
 ];
 
 export const THEME_BG = {
@@ -13,7 +14,8 @@ export const THEME_BG = {
   azul: '#081426',
   marfil: '#F5F2EA',
   lavanda: '#F2F0F8',
-  rosa: '#FDF2F5'
+  rosa: '#FDF2F5',
+  negro: '#000000'
 };
 
 export const CONFETTI_PALETTES = {
@@ -21,7 +23,8 @@ export const CONFETTI_PALETTES = {
   azul: ['#63B3ED', '#B6DCF7', '#EDF3FA', '#2C6C9E'],
   rosa: ['#C4557E', '#F0A8C4', '#FDF2F5', '#7E3355'],
   marfil: ['#2E5D4B', '#7FB79F', '#C9A34E', '#141A16'],
-  lavanda: ['#584BA8', '#A79BE8', '#3F8C74', '#1B1630']
+  lavanda: ['#584BA8', '#A79BE8', '#3F8C74', '#1B1630'],
+  negro: ['#F2F2F2', '#BDBDBD', '#7FC8A0', '#6E6E6E']
 };
 
 // Escalas de tamaño de texto. Multiplican la base de 16px de <html>, y como
