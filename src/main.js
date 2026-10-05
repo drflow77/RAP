@@ -4,10 +4,12 @@ import { storage } from './state/storage.js';
 import { applyTheme, normalizeTheme, applyTextScale, CONFETTI_PALETTES } from './state/themes.js';
 import { devotionalService } from './services/devotionalService.js';
 import { notificationService } from './services/notificationService.js';
+import { readingPlanService } from './services/readingPlanService.js';
 
 import { renderHeader } from './components/Header.js';
 import { renderSidebar } from './components/Sidebar.js';
 import { renderDevotionalCard } from './components/DevotionalCard.js';
+import { renderReadingPlanCard } from './components/ReadingPlanCard.js';
 import { renderThreePeoplePray } from './components/ThreePeoplePray.js';
 import { renderPersonalPrayer } from './components/PersonalPrayer.js';
 import { renderAnsweredWall } from './components/AnsweredWall.js';
@@ -38,6 +40,7 @@ const appState = {
   bibleTarget: null, // cita a abrir en la Biblia ("Juan 3:16")
   currentDate: new Date(),
   currentDevotional: null,
+  currentReadings: null,
   dailyEntry: null,
   streakInfo: storage.getStreakInfo(),
   settings: storage.getSettings(),
@@ -75,6 +78,7 @@ async function loadCurrentDateData() {
   const dateStr = getDateString(appState.currentDate);
   appState.dailyEntry = storage.getDailyEntry(dateStr);
   appState.currentDevotional = await devotionalService.getByDate(appState.currentDate);
+  appState.currentReadings = await readingPlanService.getByDate(appState.currentDate);
   appState.streakInfo = storage.getStreakInfo();
 }
 
@@ -344,6 +348,19 @@ async function renderApp() {
         }
       });
       stepR.appendChild(devContainer);
+
+      const readingContainer = document.createElement('div');
+      renderReadingPlanCard(readingContainer, {
+        readings: appState.currentReadings,
+        checked: appState.dailyEntry?.readings || [],
+        onToggle: (i) => {
+          const checked = (appState.dailyEntry.readings || []).slice();
+          checked[i] = !checked[i];
+          saveEntry({ ...appState.dailyEntry, readings: checked });
+          renderApp();
+        }
+      });
+      stepR.appendChild(readingContainer);
 
       todayMain.appendChild(stepR);
     }

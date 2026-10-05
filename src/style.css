@@ -2845,3 +2845,71 @@ select.bible-version-chip {
     font-size: 3.75rem;
   }
 }
+
+/* Plan de lectura bíblica */
+.reading-card {
+  margin-top: 14px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: var(--surf);
+}
+
+.reading-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.reading-title {
+  font: 600 0.5938rem/1 var(--font-sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.reading-count {
+  font: 600 0.75rem var(--font-sans);
+  color: var(--ink2, var(--ink));
+}
+
+.reading-count.done { color: var(--acc); }
+
+.reading-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reading-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.reading-box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.5px solid var(--acc);
+  font: 700 0.8125rem/1 var(--font-sans);
+  color: var(--surf);
+}
+
+.reading-item.checked .reading-box { background: var(--acc); }
+
+.reading-ref { font: 400 1.0625rem/1.2 var(--font-serif); }
+
+.reading-item.checked .reading-ref { opacity: .55; text-decoration: line-through; }

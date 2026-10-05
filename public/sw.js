@@ -1,7 +1,8 @@
 // Subir la versión invalida la caché anterior al activarse.
 // v3: iconos nuevos, contenido real de septiembre y arreglos de offline.
 // v4: Biblia Reina-Valera 1909 sin conexión.
-const CACHE_NAME = 'rap-app-v4';
+// v5: plan de lectura bíblica.
+const CACHE_NAME = 'rap-app-v5';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';
@@ -22,7 +23,8 @@ const ASSETS_TO_CACHE = [
   './data/devotionals.json',
   // La Biblia pesa unos 4 MB (1.2 MB comprimida). Se guarda al instalar para
   // que funcione sin conexión aunque nunca se haya abierto la pestaña.
-  './data/biblia/rv1909.json'
+  './data/biblia/rv1909.json',
+  './data/reading-plan.json'
 ];
 
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
@@ -120,7 +122,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Devocionales: se sirven al instante y se refrescan por detrás.
-  if (url.pathname.endsWith('/data/devotionals.json')) {
+  if (url.pathname.endsWith('/data/devotionals.json') || url.pathname.endsWith('/data/reading-plan.json')) {
     event.respondWith(staleWhileRevalidate(request, CACHE_NAME));
     return;
   }
