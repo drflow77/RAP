@@ -22,6 +22,7 @@ import {
 } from '../services/bibleService.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
+import { renderReadingPlanCard, firstChapterOf } from './ReadingPlanCard.js';
 
 const saved = storage.getBibleState();
 
@@ -38,9 +39,11 @@ const ui = {
 let root = null;
 let data = null;
 let loadError = false;
+let readingPlan = null; // { readings, checked, onToggle } del plan de lectura de hoy
 
-export function renderBible(container, { target = null, onTargetConsumed } = {}) {
+export function renderBible(container, { target = null, onTargetConsumed, plan = null } = {}) {
   root = container;
+  readingPlan = plan;
 
   // Viene de "Leer el capítulo" en el devocional
   if (target) {
@@ -174,6 +177,8 @@ function drawHome() {
         ${icons.chevronRight}
       </button>
 
+      <div id="bible-reading-plan"></div>
+
       <div class="month-pills">
         <button class="month-pill ${ui.testament === 'ot' ? 'active' : ''}" data-testament="ot">Antiguo</button>
         <button class="month-pill ${ui.testament === 'nt' ? 'active' : ''}" data-testament="nt">Nuevo</button>
@@ -193,6 +198,16 @@ function drawHome() {
 
   bindVersionSelect();
   showOfflineStatus(state.version);
+
+  if (readingPlan) {
+    renderReadingPlanCard(root.querySelector('#bible-reading-plan'), {
+      ...readingPlan,
+      onOpen: (reading) => {
+        const ref = parseReference(firstChapterOf(reading));
+        if (ref?.chapter) openReader(ref.book, ref.chapter);
+      }
+    });
+  }
 
   root.querySelector('#bible-search-form').addEventListener('submit', (e) => {
     e.preventDefault();

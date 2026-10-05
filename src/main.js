@@ -9,7 +9,7 @@ import { readingPlanService } from './services/readingPlanService.js';
 import { renderHeader } from './components/Header.js';
 import { renderSidebar } from './components/Sidebar.js';
 import { renderDevotionalCard } from './components/DevotionalCard.js';
-import { renderReadingPlanCard, firstChapterOf } from './components/ReadingPlanCard.js';
+import { firstChapterOf } from './components/ReadingPlanCard.js';
 import { renderThreePeoplePray } from './components/ThreePeoplePray.js';
 import { renderPersonalPrayer } from './components/PersonalPrayer.js';
 import { renderAnsweredWall } from './components/AnsweredWall.js';
@@ -358,19 +358,6 @@ async function renderApp() {
       });
       stepR.appendChild(devContainer);
 
-      const readingContainer = document.createElement('div');
-      renderReadingPlanCard(readingContainer, {
-        readings: appState.currentReadings,
-        onOpen: openReading,
-        checked: appState.dailyEntry?.readings || [],
-        onToggle: (i) => {
-          const checked = (appState.dailyEntry.readings || []).slice();
-          checked[i] = !checked[i];
-          saveEntry({ ...appState.dailyEntry, readings: checked });
-          renderApp();
-        }
-      });
-      stepR.appendChild(readingContainer);
 
       todayMain.appendChild(stepR);
     }
@@ -462,7 +449,17 @@ async function renderApp() {
     const bibleContainer = document.createElement('div');
     renderBible(bibleContainer, {
       target: appState.bibleTarget,
-      onTargetConsumed: () => { appState.bibleTarget = null; }
+      onTargetConsumed: () => { appState.bibleTarget = null; },
+      plan: appState.currentReadings && {
+        readings: appState.currentReadings,
+        checked: appState.dailyEntry?.readings || [],
+        onToggle: (i) => {
+          const checked = (appState.dailyEntry.readings || []).slice();
+          checked[i] = !checked[i];
+          saveEntry({ ...appState.dailyEntry, readings: checked });
+          renderApp();
+        }
+      }
     });
     mainView.appendChild(bibleContainer);
 
