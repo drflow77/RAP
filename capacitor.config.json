@@ -1,0 +1,8 @@
+{
+  "appId": "app.rap.oracion",
+  "appName": "RAP Oración",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#0A1512"
+  }
+}

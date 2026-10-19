@@ -64,3 +64,17 @@ BASE_PATH=/ npm run build
 
 Newsreader (editorial) y Manrope (interfaz), cargadas desde Google Fonts. Sin conexión, la app
 funciona igual pero cae a las fuentes del sistema.
+
+## App nativa de Android (Google Play)
+
+La misma app web se empaqueta con [Capacitor](https://capacitorjs.com) (`appId` en
+`capacitor.config.json`, proyecto en `android/`).
+
+```bash
+npm run android        # build web (base ./) + sync + abre Android Studio
+npm run build:native   # solo build + sync
+```
+
+En Android Studio: **Build → Generate Signed App Bundle** (AAB) para subir a Play Console.
+Ícono de 512 px para la ficha de Play: `android/play-store-icon-512.png`. Antes de cada
+publicación sube `versionCode` y `versionName` en `android/app/build.gradle`.

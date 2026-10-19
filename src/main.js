@@ -17,6 +17,7 @@ import { renderStreakCalendar } from './components/StreakCalendar.js';
 import { renderExploreDevotionals } from './components/ExploreDevotionals.js';
 import { renderBible } from './components/BibleReader.js';
 import { renderSettingsModal } from './components/SettingsModal.js';
+import { isNative } from './platform.js';
 import { renderInstallBanner } from './components/InstallBanner.js';
 import { renderMonthlyMemoryVerse } from './components/MonthlyMemoryVerse.js';
 import { renderWelcomeMemoryModal } from './components/WelcomeMemoryModal.js';
@@ -282,7 +283,7 @@ async function renderApp() {
     currentTab: appState.currentTab,
     streakInfo: appState.streakInfo,
     theme: appState.settings.theme,
-    logoUrl: `${import.meta.env.BASE_URL}brand/logo-faa.png`,
+    logoUrl: `${import.meta.env.BASE_URL}brand/logo-rap.svg`,
     readings: appState.currentReadings,
     onOpenReading: openReading,
     onSelectTab: (tab) => {
@@ -561,7 +562,7 @@ function initDailyReminderChecker() {
 
 function registerServiceWorker() {
   // Solo en la build de producción (en desarrollo se purga al arrancar).
-  if (import.meta.env.DEV) return;
+  if (import.meta.env.DEV || isNative) return;
 
   if (!('serviceWorker' in navigator)) return;
 

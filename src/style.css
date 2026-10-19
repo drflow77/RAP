@@ -1672,13 +1672,8 @@ select.settings-row-value {
 .welcome-logo {
   width: 116px;
   height: 116px;
-  background-color: var(--acc);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  object-fit: contain;
+  border-radius: 22%;
 }
 
 .welcome-eyebrow {
@@ -2586,13 +2581,8 @@ select.bible-version-chip {
   width: 38px;
   height: 38px;
   flex: none;
-  background-color: var(--acc);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  object-fit: contain;
+  border-radius: 22%;
 }
 
 .side-brand-copy {

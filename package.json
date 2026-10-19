@@ -1,18 +1,23 @@
 {
   "name": "rap-devocional-pwa",
   "private": true,
-  "version": "1.1.2",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:native": "BASE_PATH=./ vite build && cap sync android",
+    "android": "npm run build:native && cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
     "canvas-confetti": "^1.9.4",
     "lucide": "^0.475.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "vite": "^6.1.0"
   }
 }

@@ -3,6 +3,11 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.2.0',
+    date: '2026-10-18',
+    changes: ['Nuevo logo de la llama en la app y en los íconos', 'Preparada la versión nativa de Android para Google Play']
+  },
+  {
     version: '1.1.2',
     date: '2026-10-05',
     changes: ['Ajustes: la paleta de color muestra solo los círculos, sin nombres']

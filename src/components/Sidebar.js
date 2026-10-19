@@ -36,8 +36,7 @@ export function renderSidebar(container, {
   const markup = `
     <aside class="app-side">
       <div class="side-brand">
-        <div class="side-logo" role="img" aria-label="Fundación Amigos Axapusco"
-             style="-webkit-mask-image:url('${esc(logoUrl)}');mask-image:url('${esc(logoUrl)}')"></div>
+        <img class="side-logo" src="${esc(logoUrl)}" alt="RAP">
         <div class="side-brand-copy">
           <div class="side-wordmark">Diario de oración</div>
           <div class="side-tagline">Relación · Amor · Petición</div>

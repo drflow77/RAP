@@ -1,5 +1,6 @@
 // Texto bíblico: carga de versiones, búsqueda y lectura de citas.
 import { BIBLE_BOOKS } from './bibleBooks.js';
+import { isNative } from '../platform.js';
 
 // Versiones incluidas en la app. Para sumar otra (por ejemplo la RV1960 o la
 // NTV cuando haya licencia) basta con dejar su JSON en public/data/biblia/,
@@ -68,6 +69,7 @@ export function loadVersion(id) {
 // ¿Ya está guardada en el teléfono? La guarda el service worker al instalar
 // la app, así que la marca solo aparece en la versión publicada.
 export async function isVersionOffline(id) {
+  if (isNative) return true; // en la app nativa la Biblia va dentro del paquete
   if (!('caches' in window)) return false;
   try {
     const url = new URL(`${import.meta.env.BASE_URL}${getVersion(id).file}`, window.location.href).href;

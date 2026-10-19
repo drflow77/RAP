@@ -5,7 +5,8 @@
 // v6: tema Negro y número de versión (1.1.0).
 // v7: logo en el botón Biblia de PC (1.1.1).
 // v8: paleta sin nombres en Ajustes (1.1.2).
-const CACHE_NAME = 'rap-app-v8';
+// v9: logo de la llama y versión nativa de Android (1.2.0).
+const CACHE_NAME = 'rap-app-v9';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';
@@ -22,7 +23,7 @@ const ASSETS_TO_CACHE = [
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/nav-biblia.svg',
-  './brand/logo-faa.png',
+  './brand/logo-rap.svg',
   './data/devotionals.json',
   // La Biblia pesa unos 4 MB (1.2 MB comprimida). Se guarda al instalar para
   // que funcione sin conexión aunque nunca se haya abierto la pestaña.

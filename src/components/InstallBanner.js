@@ -1,4 +1,6 @@
 // InstallBanner Component — guía de instalación de la PWA
+import { isNative } from '../platform.js';
+
 let deferredPrompt = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -9,7 +11,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 export function renderInstallBanner(container) {
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if (isStandalone || sessionStorage.getItem('rap_install_dismissed')) {
+  if (isNative || isStandalone || sessionStorage.getItem('rap_install_dismissed')) {
     container.innerHTML = '';
     return;
   }
