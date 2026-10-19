@@ -3017,7 +3017,7 @@ select.bible-version-chip {
 }
 
 /* Logo genérico (solo versión nativa de Android): imagen a color, no máscara */
-.side-logo-img { width: 44px; height: 44px; flex: none; border-radius: 22%; }
+.side-logo-img { width: 56px; height: 56px; flex: none; border-radius: 22%; }
 .welcome-logo-img { width: 156px; height: 156px; border-radius: 22%; }
 @media (min-width: 900px) { .welcome-logo-img { width: 210px; height: 210px; } }
 @media (min-width: 1280px) { .welcome-logo-img { width: 240px; height: 240px; } }
