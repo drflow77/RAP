@@ -8,6 +8,7 @@ import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { firstChapterOf } from './ReadingPlanCard.js';
 import { APP_VERSION } from '../changelog.js';
+import { isNative } from '../platform.js';
 import { THEMES } from '../state/themes.js';
 
 const NAV_ITEMS = [
@@ -36,7 +37,10 @@ export function renderSidebar(container, {
   const markup = `
     <aside class="app-side">
       <div class="side-brand">
-        <img class="side-logo" src="${esc(logoUrl)}" alt="RAP">
+        ${isNative
+          ? `<img class="side-logo-img" src="${import.meta.env.BASE_URL}brand/logo-rap.svg" alt="RAP">`
+          : `<div class="side-logo" role="img" aria-label="Fundación Amigos Axapusco"
+             style="-webkit-mask-image:url('${esc(logoUrl)}');mask-image:url('${esc(logoUrl)}')"></div>`}
         <div class="side-brand-copy">
           <div class="side-wordmark">Diario de oración</div>
           <div class="side-tagline">Relación · Amor · Petición</div>

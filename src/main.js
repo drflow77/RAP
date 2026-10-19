@@ -283,7 +283,7 @@ async function renderApp() {
     currentTab: appState.currentTab,
     streakInfo: appState.streakInfo,
     theme: appState.settings.theme,
-    logoUrl: `${import.meta.env.BASE_URL}brand/logo-rap.svg`,
+    logoUrl: `${import.meta.env.BASE_URL}brand/logo-faa.png`,
     readings: appState.currentReadings,
     onOpenReading: openReading,
     onSelectTab: (tab) => {

@@ -5,7 +5,7 @@ export const CHANGELOG = [
   {
     version: '1.2.0',
     date: '2026-10-18',
-    changes: ['Nuevo logo de la llama en la app y en los íconos', 'Preparada la versión nativa de Android para Google Play']
+    changes: ['Preparada la versión nativa de Android (genérica, con el logo de la llama) para Google Play']
   },
   {
     version: '1.1.2',

@@ -1,6 +1,7 @@
 // WelcomeMemoryModal Component — Portada: eslogan + versículo del mes a memorizar
 import { MONTHLY_MEMORY_VERSES, getMemorizedMap, getMemoryVerseForMonth } from './MonthlyMemoryVerse.js';
 import { esc } from './escape.js';
+import { isNative } from '../platform.js';
 
 export function renderWelcomeMemoryModal(container, { currentDate, onClose }) {
   const currentMonth = currentDate.getMonth() + 1;
@@ -16,13 +17,16 @@ export function renderWelcomeMemoryModal(container, { currentDate, onClose }) {
   });
 
   // Ruta estable (no lleva hash), así el service worker puede precachearla.
-  const logoUrl = `${import.meta.env.BASE_URL}brand/logo-rap.svg`;
+  const logoUrl = `${import.meta.env.BASE_URL}brand/logo-faa.png`;
 
   container.innerHTML = `
     <div class="welcome-overlay" id="welcome-overlay">
       <div class="welcome-inner">
         <div class="welcome-brand">
-          <img class="welcome-logo" src="${logoUrl}" alt="RAP">
+          ${isNative
+            ? `<img class="welcome-logo-img" src="${import.meta.env.BASE_URL}brand/logo-rap.svg" alt="RAP">`
+            : `<div class="welcome-logo" role="img" aria-label="Fundación Amigos Axapusco"
+               style="-webkit-mask-image:url('${logoUrl}');mask-image:url('${logoUrl}')"></div>`}
         </div>
 
         <div>
