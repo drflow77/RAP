@@ -75,9 +75,9 @@ export const MONTHLY_MEMORY_VERSES = [
   {
     month: 11,
     monthName: "Noviembre",
-    theme: "Gratitud y Alabanza",
-    passage: "Salmos 100:4",
-    verse: "Entrad por sus puertas con acción de gracias, por sus atrios con alabanza; alabadle, bendecid su nombre."
+    theme: "La vida de David",
+    passage: "1 Samuel 16:7",
+    verse: "Porque Jehová no mira lo que mira el hombre; pues el hombre mira lo que está delante de sus ojos, pero Jehová mira el corazón."
   },
   {
     month: 12,

@@ -3,6 +3,11 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.2.1',
+    date: '2026-10-24',
+    changes: ['Devocional de noviembre: «La vida de David», del 4 al 30 (los días 1 al 3 siguen con los días apartados para Dios)']
+  },
+  {
     version: '1.2.0',
     date: '2026-10-18',
     changes: ['Preparada la versión nativa de Android (genérica, con el logo de la llama) para Google Play']
