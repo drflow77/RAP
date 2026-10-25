@@ -3,6 +3,11 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.2.2',
+    date: '2026-10-25',
+    changes: ['Política de privacidad publicada, con enlace al final de Ajustes']
+  },
+  {
     version: '1.2.1',
     date: '2026-10-24',
     changes: ['Devocional de noviembre: «La vida de David», del 4 al 30 (los días 1 al 3 siguen con los días apartados para Dios)']

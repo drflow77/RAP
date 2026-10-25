@@ -7,7 +7,8 @@
 // v8: paleta sin nombres en Ajustes (1.1.2).
 // v9: versión nativa de Android (1.2.0); la web no cambia de aspecto.
 // v10: devocional de noviembre, La vida de David (1.2.1).
-const CACHE_NAME = 'rap-app-v10';
+// v11: política de privacidad (1.2.2).
+const CACHE_NAME = 'rap-app-v11';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';

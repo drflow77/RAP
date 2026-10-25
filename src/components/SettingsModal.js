@@ -6,6 +6,10 @@ import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { CHANGELOG, APP_VERSION } from '../changelog.js';
 
+// Dirección pública fija (la que se registra en Google Play). Se usa la misma
+// en la web y en Android para que abra igual en ambos.
+const PRIVACY_URL = 'https://drflow77.github.io/RAP/privacidad.html';
+
 export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpdated, onThemeChange }) {
   if (!isOpen) {
     container.innerHTML = '';
@@ -128,6 +132,7 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
 
         <div class="sheet-footer">
           <p>Inspirado en la metodología de oración de Ensancha Guatemala.<br>Versión ${esc(APP_VERSION)}</p>
+          <p><a href="${PRIVACY_URL}" target="_blank" rel="noopener">Política de privacidad</a></p>
           <details class="changelog">
             <summary>Novedades</summary>
             ${CHANGELOG.map((c) => `
