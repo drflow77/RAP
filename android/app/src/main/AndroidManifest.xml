@@ -35,6 +35,16 @@
         </provider>
     </application>
 
+    <!-- Android 11+: necesario para encontrar el motor de voz del teléfono -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.tts.engine.CHECK_TTS_DATA" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />

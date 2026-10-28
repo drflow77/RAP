@@ -5,6 +5,7 @@ import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { CHANGELOG, APP_VERSION } from '../changelog.js';
+import { isNative } from '../platform.js';
 
 // Dirección pública fija (la que se registra en Google Play). Se usa la misma
 // en la web y en Android para que abra igual en ambos.
@@ -79,7 +80,7 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
           <input type="time" id="reminder-time-input" class="settings-row-value" value="${esc(settings.reminderTime || '07:00')}" />
         </div>
 
-        <div class="settings-row">
+        ${isNative ? '' : `<div class="settings-row">
           <div>
             <div class="settings-label">Voz del devocional</div>
             <div class="settings-hint">Lectura en audio</div>
@@ -90,7 +91,7 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
               <option value="${esc(v.voiceURI)}" ${settings.voiceURI === v.voiceURI ? 'selected' : ''}>${esc(v.name)}</option>
             `).join('')}
           </select>
-        </div>
+        </div>`}
 
         <div class="settings-block">
           <div>
