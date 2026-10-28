@@ -3,6 +3,14 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.3.0',
+    date: '2026-10-28',
+    changes: [
+      'Ajustes: nueva sección «Acerca de» con la descripción de RAP, la versión, la política de privacidad y las novedades',
+      'Ajustes: se quitó la fila «Modo», que solo repetía si el color elegido es claro u oscuro'
+    ]
+  },
+  {
     version: '1.2.2',
     date: '2026-10-25',
     changes: ['Política de privacidad publicada, con enlace al final de Ajustes']

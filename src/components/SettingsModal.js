@@ -1,4 +1,4 @@
-// SettingsModal Component — hoja inferior: color de la app, nombre, recordatorio, voz, datos
+// SettingsModal Component — hoja inferior: color de la app, nombre, recordatorio, voz, datos, acerca de
 import { storage } from '../state/storage.js';
 import { notificationService } from '../services/notificationService.js';
 import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale } from '../state/themes.js';
@@ -18,7 +18,6 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
 
   const settings = storage.getSettings();
   const activeTheme = normalizeTheme(settings.theme);
-  const modeLabel = THEMES.find((t) => t.key === activeTheme)?.mode || 'Oscuro';
   const activeScale = normalizeTextScale(settings.textScale);
   const frequentPeople = storage.getFrequentPeople();
 
@@ -82,14 +81,6 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
 
         <div class="settings-row">
           <div>
-            <div class="settings-label">Modo</div>
-            <div class="settings-hint">Claro u oscuro</div>
-          </div>
-          <span class="settings-row-value">${modeLabel}</span>
-        </div>
-
-        <div class="settings-row">
-          <div>
             <div class="settings-label">Voz del devocional</div>
             <div class="settings-hint">Lectura en audio</div>
           </div>
@@ -130,9 +121,16 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
           </div>
         </div>
 
-        <div class="sheet-footer">
-          <p>Inspirado en la metodología de oración de Ensancha Guatemala.<br>Versión ${esc(APP_VERSION)}</p>
-          <p><a href="${PRIVACY_URL}" target="_blank" rel="noopener">Política de privacidad</a></p>
+        <div class="settings-block">
+          <div>
+            <div class="settings-label">Acerca de</div>
+            <div class="settings-hint">RAP Oración · versión ${esc(APP_VERSION)}</div>
+          </div>
+          <div class="settings-about">
+            <p>Diario de oración con el método RAP: <strong>Relación</strong> (el devocional del día), <strong>Amor</strong> (tres personas por quienes orar) y <strong>Petición</strong> (tu petición personal).</p>
+            <p>Inspirado en la metodología de oración de Ensancha Guatemala. Desarrollada por Medicode Solutions.</p>
+            <p><a href="${PRIVACY_URL}" target="_blank" rel="noopener">Política de privacidad</a></p>
+          </div>
           <details class="changelog">
             <summary>Novedades</summary>
             ${CHANGELOG.map((c) => `

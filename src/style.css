@@ -1610,16 +1610,6 @@ select.settings-row-value {
   padding: 8px 10px;
 }
 
-.sheet-footer {
-  text-align: center;
-  padding-top: 4px;
-}
-
-.sheet-footer p {
-  font: 400 0.6875rem/1.6 var(--font-sans);
-  color: var(--ink3);
-}
-
 /* --------------------------------------------------------------------------
    14. Portada / Bienvenida
    -------------------------------------------------------------------------- */
@@ -2995,6 +2985,14 @@ select.bible-version-chip {
   font: 500 0.625rem var(--font-sans);
   color: var(--ink3);
 }
+
+.settings-about p {
+  margin-top: 6px;
+  font: 400 0.8125rem/1.55 var(--font-sans);
+  color: var(--ink2);
+}
+
+.settings-about a { color: var(--acc); font-weight: 600; }
 
 .changelog {
   margin-top: 10px;

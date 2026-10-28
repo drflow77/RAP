@@ -1,12 +1,12 @@
 // Los 6 temas de color de la app. La clave se persiste en settings.theme.
 
 export const THEMES = [
-  { key: 'bosque',  label: 'Bosque',  swatch: '#7FC8A0', mode: 'Oscuro' },
-  { key: 'marfil',  label: 'Marfil',  swatch: '#2E5D4B', mode: 'Claro' },
-  { key: 'lavanda', label: 'Lavanda', swatch: '#584BA8', mode: 'Claro' },
-  { key: 'rosa',    label: 'Rosa',    swatch: '#C4557E', mode: 'Claro' },
-  { key: 'azul',    label: 'Azul',    swatch: '#63B3ED', mode: 'Oscuro' },
-  { key: 'negro',   label: 'Negro',   swatch: '#111111', mode: 'Oscuro' }
+  { key: 'bosque',  label: 'Bosque',  swatch: '#7FC8A0' },
+  { key: 'marfil',  label: 'Marfil',  swatch: '#2E5D4B' },
+  { key: 'lavanda', label: 'Lavanda', swatch: '#584BA8' },
+  { key: 'rosa',    label: 'Rosa',    swatch: '#C4557E' },
+  { key: 'azul',    label: 'Azul',    swatch: '#63B3ED' },
+  { key: 'negro',   label: 'Negro',   swatch: '#111111' }
 ];
 
 export const THEME_BG = {
