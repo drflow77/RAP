@@ -5,7 +5,6 @@ import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { CHANGELOG, APP_VERSION } from '../changelog.js';
-import { isNative } from '../platform.js';
 
 // Dirección pública fija (la que se registra en Google Play). Se usa la misma
 // en la web y en Android para que abra igual en ambos.
@@ -21,9 +20,6 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
   const activeTheme = normalizeTheme(settings.theme);
   const activeScale = normalizeTextScale(settings.textScale);
   const frequentPeople = storage.getFrequentPeople();
-
-  const voices = ('speechSynthesis' in window ? window.speechSynthesis.getVoices() : [])
-    .filter((v) => v.lang.startsWith('es'));
 
   container.innerHTML = `
     <div class="modal-backdrop" id="modal-backdrop-el">
@@ -79,19 +75,6 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
           </div>
           <input type="time" id="reminder-time-input" class="settings-row-value" value="${esc(settings.reminderTime || '07:00')}" />
         </div>
-
-        ${isNative ? '' : `<div class="settings-row">
-          <div>
-            <div class="settings-label">Voz del devocional</div>
-            <div class="settings-hint">Lectura en audio</div>
-          </div>
-          <select id="voice-select" class="settings-row-value">
-            <option value="">Automática</option>
-            ${voices.map((v) => `
-              <option value="${esc(v.voiceURI)}" ${settings.voiceURI === v.voiceURI ? 'selected' : ''}>${esc(v.name)}</option>
-            `).join('')}
-          </select>
-        </div>`}
 
         <div class="settings-block">
           <div>
@@ -187,11 +170,6 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
   container.querySelector('#reminder-time-input')?.addEventListener('change', (e) => {
     storage.saveSettings({ reminderTime: e.target.value });
     onSettingsUpdated();
-  });
-
-  // Voz
-  container.querySelector('#voice-select')?.addEventListener('change', (e) => {
-    storage.saveSettings({ voiceURI: e.target.value || null });
   });
 
   // Aviso de prueba

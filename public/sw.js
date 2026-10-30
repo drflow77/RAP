@@ -10,7 +10,8 @@
 // v11: política de privacidad (1.2.2).
 // v12: sección Acerca de y sin la fila Modo en Ajustes (1.3.0).
 // v13: lectura en voz con el motor nativo en Android (1.3.1).
-const CACHE_NAME = 'rap-app-v13';
+// v14: sin el selector de voz en Ajustes (1.3.2).
+const CACHE_NAME = 'rap-app-v14';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';

@@ -3,6 +3,11 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.3.2',
+    date: '2026-10-29',
+    changes: ['Ajustes: se quitó la opción «Voz del devocional», que solo ofrecía «Automática»']
+  },
+  {
     version: '1.3.1',
     date: '2026-10-28',
     changes: ['Android: «Escuchar devocional» ahora lee en voz alta con la voz del teléfono (antes decía que no se podía)']
