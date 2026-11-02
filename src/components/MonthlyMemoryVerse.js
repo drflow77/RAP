@@ -76,8 +76,8 @@ export const MONTHLY_MEMORY_VERSES = [
     month: 11,
     monthName: "Noviembre",
     theme: "La vida de David",
-    passage: "1 Samuel 16:7",
-    verse: "Porque Jehová no mira lo que mira el hombre; pues el hombre mira lo que está delante de sus ojos, pero Jehová mira el corazón."
+    passage: "Proverbios 4:23",
+    verse: "Sobre toda cosa guardada guarda tu corazón; porque de él mana la vida."
   },
   {
     month: 12,

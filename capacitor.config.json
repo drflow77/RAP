@@ -4,5 +4,11 @@
   "webDir": "dist",
   "android": {
     "backgroundColor": "#0A1512"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_rap",
+      "iconColor": "#F59E0B"
+    }
   }
 }

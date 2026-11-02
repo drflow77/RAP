@@ -1,6 +1,7 @@
 // SettingsModal Component — hoja inferior: color de la app, nombre, recordatorio, voz, datos, acerca de
 import { storage } from '../state/storage.js';
-import { notificationService } from '../services/notificationService.js';
+import { notificationService, getSpanishVoices } from '../services/notificationService.js';
+import { isNative } from '../platform.js';
 import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale } from '../state/themes.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
@@ -20,6 +21,12 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
   const activeTheme = normalizeTheme(settings.theme);
   const activeScale = normalizeTextScale(settings.textScale);
   const frequentPeople = storage.getFrequentPeople();
+
+  // En Android la app usa la voz del teléfono; el selector es solo para la web
+  const voices = isNative ? [] : getSpanishVoices();
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const hasGoodVoice = voices.some((v) => /premium|mejorad|enhanced/i.test(v.name));
 
   container.innerHTML = `
     <div class="modal-backdrop" id="modal-backdrop-el">
@@ -71,10 +78,30 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
         <div class="settings-row">
           <div>
             <div class="settings-label">Recordatorio</div>
-            <div class="settings-hint">Aviso diario para orar</div>
+            <div class="settings-hint">${isNative ? 'Aviso diario para orar' : 'Aviso diario para orar (con RAP abierta)'}</div>
           </div>
           <input type="time" id="reminder-time-input" class="settings-row-value" value="${esc(settings.reminderTime || '07:00')}" />
         </div>
+
+        ${voices.length > 1 ? `<div class="settings-row">
+          <div>
+            <div class="settings-label">Voz del devocional</div>
+            <div class="settings-hint">Al elegirla se escucha un ejemplo</div>
+          </div>
+          <select id="voice-select" class="settings-row-value">
+            <option value="">Automática</option>
+            ${voices.map((v) => `
+              <option value="${esc(v.voiceURI)}" ${settings.voiceURI === v.voiceURI ? 'selected' : ''}>${esc(v.name)}</option>
+            `).join('')}
+          </select>
+        </div>` : ''}
+
+        ${isIOS && !isNative && !hasGoodVoice ? `<div class="settings-block">
+          <div>
+            <div class="settings-label">Una voz más natural</div>
+            <div class="settings-hint">En el iPhone abre Ajustes › Accesibilidad › Contenido leído › Voces › Español, elige una voz (por ejemplo Paulina) y descarga la versión «Mejorada». Luego cierra y abre RAP: la usará sola.</div>
+          </div>
+        </div>` : ''}
 
         <div class="settings-block">
           <div>
@@ -167,9 +194,23 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
   userNameInput?.addEventListener('change', () => onSettingsUpdated());
 
   // Recordatorio
-  container.querySelector('#reminder-time-input')?.addEventListener('change', (e) => {
-    storage.saveSettings({ reminderTime: e.target.value });
+  container.querySelector('#reminder-time-input')?.addEventListener('change', async (e) => {
+    const time = e.target.value;
+    storage.saveSettings({ reminderTime: time });
     onSettingsUpdated();
+    // Antes solo se guardaba la hora: sin permiso de avisos nunca llegaba nada
+    if (isNative) {
+      const ok = await notificationService.scheduleDailyReminder(time, { askPermission: true });
+      if (!ok) alert('Para recibir el recordatorio, permite las notificaciones de RAP en los ajustes del teléfono.');
+    } else if (time && !(await notificationService.requestPermission())) {
+      alert('Para recibir el recordatorio, permite las notificaciones en los ajustes de tu navegador.');
+    }
+  });
+
+  // Voz
+  container.querySelector('#voice-select')?.addEventListener('change', (e) => {
+    storage.saveSettings({ voiceURI: e.target.value || null });
+    notificationService.previewVoice(e.target.value);
   });
 
   // Aviso de prueba

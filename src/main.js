@@ -541,6 +541,12 @@ async function renderApp() {
 
 // Daily Notification Scheduler in Background
 function initDailyReminderChecker() {
+  if (isNative) {
+    // Se reprograma al abrir por si cambió la hora o se reinstaló la app
+    notificationService.scheduleDailyReminder(storage.getSettings().reminderTime);
+    return;
+  }
+
   setInterval(() => {
     const settings = storage.getSettings();
     if (!settings.reminderTime) return;
@@ -552,9 +558,7 @@ function initDailyReminderChecker() {
       const entry = storage.getDailyEntry(getDateString(now));
 
       if (!entry || !entry.completed) {
-        notificationService.sendNotification('Tiempo de oración RAP', {
-          body: 'Nunca estás demasiado ocupado para no orar. Tómate 2 minutos para tu devocional y tus 3 personas.'
-        });
+        notificationService.sendNotification('Tiempo de oración RAP');
       }
     }
   }, 30000);

@@ -3,6 +3,17 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.3.3',
+    date: '2026-11-01',
+    changes: [
+      'Escuchar devocional: las citas se leen completas («Lucas capítulo 5, versículo 21») y ya no como una hora',
+      'Android: la voz suena por el altavoz y pasa al Bluetooth del auto, en vez de sonar como llamada; baja la música mientras lee',
+      'Recordatorio: al elegir la hora en Ajustes se pide permiso de avisos; en Android llega cada día aunque la app esté cerrada',
+      'Cita del mes de noviembre: Proverbios 4:23',
+      'Navegador e iPhone: la lectura usa sola la voz en español más natural del dispositivo; en Ajustes vuelve «Voz del devocional» con un ejemplo al elegir, e instrucciones para descargar una voz «Mejorada» en iPhone'
+    ]
+  },
+  {
     version: '1.3.2',
     date: '2026-10-29',
     changes: ['Ajustes: se quitó la opción «Voz del devocional», que solo ofrecía «Automática»']
