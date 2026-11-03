@@ -132,6 +132,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Lista de Shorts: siempre de la red y sin guardar copia. Si no hay conexión
+  // la tarjeta del Short simplemente no aparece (el enlace tampoco abriría).
+  if (url.pathname.endsWith('/shorts.json')) return;
+
   // Devocionales: se sirven al instante y se refrescan por detrás.
   if (url.pathname.endsWith('/data/devotionals.json') || url.pathname.endsWith('/data/reading-plan.json')) {
     event.respondWith(staleWhileRevalidate(request, CACHE_NAME));

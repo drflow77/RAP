@@ -7,3 +7,7 @@ design_handoff_rap_rediseno/
 .DS_Store
 *.log
 .vite/
+
+# Llave de firma de la app de Play Store: nunca al repositorio (es público)
+*.jks
+*.keystore

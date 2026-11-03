@@ -48,6 +48,42 @@ deja su JSON con el mismo formato en `public/data/biblia/` y súmala a `BIBLE_VE
 `src/services/bibleService.js`. El selector de versión aparece solo cuando hay más de una.
 Ojo: este repositorio es público, así que un texto con licencia no debe subirse aquí.
 
+## Short del día (canal Palabra Vida Abundante)
+
+En el paso R, debajo del devocional, aparece la tarjeta **Escucha el Salmo de hoy** con el
+Short del canal [Palabra Vida Abundante](https://www.youtube.com/@PalabraVidaAbundante).
+Tocarla abre el Short en YouTube (en Android, en la app de YouTube o en el navegador).
+
+La lista vive en [`public/shorts.json`](public/shorts.json) y la app la descarga al abrirse
+desde https://drflow77.github.io/RAP/shorts.json, también la app de Android. Para añadir un
+Short **no hace falta publicar otra versión en Play Store**: basta con editar el archivo y
+hacer push a `main`.
+
+Para añadir uno, agrega al final de la lista:
+
+```json
+{
+  "fecha": "2026-11-04",
+  "titulo": "Salmo 100",
+  "pasaje": "Salmo 100",
+  "url": "https://youtube.com/shorts/ID_DEL_SHORT"
+}
+```
+
+- `fecha` (`AAAA-MM-DD`): el día en que se muestra. Si un día no tiene Short, la tarjeta
+  muestra el más reciente anterior. Las fechas futuras se pueden dejar listas de antemano.
+- `titulo`: lo que se lee en grande. `pasaje` se muestra debajo si es distinto del título.
+- `url`: el enlace de YouTube (Compartir → Copiar enlace). Solo se aceptan enlaces de
+  `youtube.com` o `youtu.be`.
+- Cuidado con las comas: cada entrada va separada por una coma, pero la última no lleva.
+  Si el JSON queda mal escrito la tarjeta deja de aparecer (la app sigue funcionando).
+
+Las entradas con `"ejemplo": true` solo se ven con `npm run dev`; en la web publicada y en
+Android se ignoran. Cuando subas los Shorts reales, sustitúyelas o bórralas.
+
+Sin conexión la tarjeta no aparece: la lista no se guarda en caché (el service worker la deja
+pasar a la red) y nada más en la app depende de ella.
+
 ## Despliegue
 
 Cada push a `main` publica automáticamente en GitHub Pages mediante

@@ -10,6 +10,7 @@ import { renderHeader } from './components/Header.js';
 import { renderSidebar } from './components/Sidebar.js';
 import { renderDevotionalCard } from './components/DevotionalCard.js';
 import { firstChapterOf } from './components/ReadingPlanCard.js';
+import { renderDailyShortCard } from './components/DailyShortCard.js';
 import { renderThreePeoplePray } from './components/ThreePeoplePray.js';
 import { renderPersonalPrayer } from './components/PersonalPrayer.js';
 import { renderAnsweredWall } from './components/AnsweredWall.js';
@@ -359,6 +360,9 @@ async function renderApp() {
       });
       stepR.appendChild(devContainer);
 
+      const shortContainer = document.createElement('div');
+      renderDailyShortCard(shortContainer, { dateStr: getDateString(appState.currentDate) });
+      stepR.appendChild(shortContainer);
 
       todayMain.appendChild(stepR);
     }
