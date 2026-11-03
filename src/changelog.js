@@ -3,6 +3,13 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.3.4',
+    date: '2026-11-03',
+    changes: [
+      'Nueva tarjeta «Escucha el Salmo de hoy» debajo del devocional: abre en YouTube el Short del día del canal Palabra Vida Abundante (solo con conexión)'
+    ]
+  },
+  {
     version: '1.3.3',
     date: '2026-11-01',
     changes: [

@@ -13,7 +13,8 @@
 // v14: sin el selector de voz en Ajustes (1.3.2).
 // v15: citas bíblicas bien leídas, audio por altavoz/Bluetooth en Android,
 //      recordatorio diario, cita de noviembre Proverbios 4:23 y mejor voz (1.3.3).
-const CACHE_NAME = 'rap-app-v15';
+// v16: tarjeta «Escucha el Salmo de hoy» con el Short del día (1.3.4).
+const CACHE_NAME = 'rap-app-v16';
 // Caché aparte para las fuentes de Google: no se borra al subir de versión,
 // porque su contenido no cambia y volver a descargarlas es caro.
 const FONT_CACHE = 'rap-fonts-v1';
