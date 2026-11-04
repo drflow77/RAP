@@ -6,12 +6,53 @@ import { THEMES, normalizeTheme, TEXT_SCALES, normalizeTextScale, applyTextScale
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { CHANGELOG, APP_VERSION } from '../changelog.js';
+import { LEGAL } from '../legal.js';
 
-// Dirección pública fija (la que se registra en Google Play). Se usa la misma
-// en la web y en Android para que abra igual en ambos.
-const PRIVACY_URL = 'https://drflow77.github.io/RAP/privacidad.html';
+// Términos o privacidad dentro de la misma hoja, con el estilo de la app.
+// «‹ Ajustes» vuelve a la hoja de ajustes.
+function renderLegalSheet(container, key, props) {
+  const doc = LEGAL[key];
+  const paras = (list = []) => list.map((t) => `<p>${esc(t)}</p>`).join('');
 
-export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpdated, onThemeChange }) {
+  container.innerHTML = `
+    <div class="modal-backdrop" id="modal-backdrop-el">
+      <div class="sheet" id="modal-content-el">
+        <div class="sheet-grabber"></div>
+
+        <div class="sheet-head">
+          <button id="btn-legal-back" class="legal-back">‹ Ajustes</button>
+          <button id="btn-close-settings" class="sheet-close" aria-label="Cerrar">✕</button>
+        </div>
+
+        <div>
+          <h3 class="sheet-title">${esc(doc.title)}</h3>
+          <div class="settings-hint">RAP Oración · Última actualización: ${esc(doc.updated)}</div>
+        </div>
+
+        <div class="settings-block legal-doc">
+          ${doc.sections.map((s) => `
+            <section>
+              <h4 class="legal-h">${esc(s.h)}</h4>
+              ${paras(s.p)}
+              ${s.li ? `<ul>${s.li.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+              ${paras(s.after)}
+            </section>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  const backdrop = container.querySelector('#modal-backdrop-el');
+  backdrop?.addEventListener('click', (e) => {
+    if (e.target === backdrop) props.onClose();
+  });
+  container.querySelector('#btn-close-settings')?.addEventListener('click', props.onClose);
+  container.querySelector('#btn-legal-back')?.addEventListener('click', () => renderSettingsModal(container, props));
+}
+
+export function renderSettingsModal(container, props) {
+  const { isOpen, onClose, onSettingsUpdated, onThemeChange } = props;
   if (!isOpen) {
     container.innerHTML = '';
     return;
@@ -140,7 +181,10 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
           <div class="settings-about">
             <p>Diario de oración con el método RAP: <strong>Relación</strong> (el devocional del día), <strong>Amor</strong> (tres personas por quienes orar) y <strong>Petición</strong> (tu petición personal).</p>
             <p>Inspirado en la metodología de oración de Ensancha Guatemala. Desarrollada por Medicode Solutions.</p>
-            <p><a href="${PRIVACY_URL}" target="_blank" rel="noopener">Política de privacidad</a></p>
+          </div>
+          <div class="legal-links">
+            <button class="legal-link" data-legal="terminos">Términos y condiciones <span aria-hidden="true">›</span></button>
+            <button class="legal-link" data-legal="privacidad">Política de privacidad <span aria-hidden="true">›</span></button>
           </div>
           <details class="changelog">
             <summary>Novedades</summary>
@@ -161,6 +205,10 @@ export function renderSettingsModal(container, { isOpen, onClose, onSettingsUpda
     if (e.target === backdrop) onClose();
   });
   container.querySelector('#btn-close-settings')?.addEventListener('click', onClose);
+
+  container.querySelectorAll('.legal-link').forEach((btn) => {
+    btn.addEventListener('click', () => renderLegalSheet(container, btn.getAttribute('data-legal'), props));
+  });
 
   // Tema: se aplica al instante y se persiste
   container.querySelectorAll('.theme-swatch').forEach((btn) => {

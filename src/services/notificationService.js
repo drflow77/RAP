@@ -8,44 +8,88 @@ import { isNative } from '../platform.js';
 // del auto y no como llamada.
 const RapVoice = registerPlugin('RapVoice');
 
-// Android no lee más de 4000 caracteres por llamada: el texto se parte por
-// oraciones y se lee en trozos seguidos. `nativeRun` invalida la lectura en
-// curso cuando se detiene o se empieza otra.
-const NATIVE_CHUNK = 3500;
-let nativeRun = 0;
-let nativeSpeaking = false;
+// La lectura va frase por frase para poder pausarla y continuar donde se
+// quedó (el navegador y Android solo saben detenerse, no pausar). `reading`
+// guarda las frases y por cuál va; `run` invalida los avisos de una lectura
+// que ya se detuvo o pausó.
+let reading = null; // { key, sentences, index, state: 'playing' | 'paused', onEnd }
+let run = 0;
 
-function splitForSpeech(text) {
-  const sentences = text.match(/[^.!?¿¡]+[.!?]*\s*/g) || [text];
-  const chunks = [];
-  let current = '';
-  for (const s of sentences) {
-    if (current && (current + s).length > NATIVE_CHUNK) {
-      chunks.push(current);
-      current = '';
-    }
-    current += s;
-  }
-  if (current.trim()) chunks.push(current);
-  return chunks;
+function splitSentences(text) {
+  return (text.match(/[^.!?¿¡]+[.!?]*\s*/g) || [text]).map((s) => s.trim()).filter(Boolean);
 }
 
-async function speakNative(text, onEnd) {
-  const run = ++nativeRun;
-  nativeSpeaking = true;
+const devotionalKey = (d) => `${d.title}|${d.passage}`;
+
+// Android avisa qué frase empieza a leer (RapVoicePlugin.java), relativa a
+// la primera que se le mandó.
+let nativeBase = 0;
+let progressListening = false;
+function listenNativeProgress() {
+  if (progressListening) return;
+  progressListening = true;
+  RapVoice.addListener('progress', ({ index }) => {
+    if (reading?.state === 'playing') reading.index = nativeBase + index;
+  }).catch(() => {});
+}
+
+function finishReading() {
+  const onEnd = reading?.onEnd;
+  reading = null;
+  onEnd?.();
+}
+
+async function playNative(from) {
+  const current = ++run;
+  nativeBase = from;
+  listenNativeProgress();
   try {
-    await RapVoice.speak({ texts: splitForSpeech(text), rate: 0.95, pitch: 1.0 });
+    const result = await RapVoice.speak({ texts: reading.sentences.slice(from), rate: 0.95, pitch: 1.0 });
+    if (current !== run || !reading) return;
+    // Una llamada u otra app tomó el audio: queda en pausa para continuar
+    if (result && result.completed === false) {
+      reading.state = 'paused';
+      reading.onEnd?.();
+    } else {
+      finishReading();
+    }
   } catch (e) {
     console.warn('Error en la lectura de audio:', e);
-    if (run === nativeRun) {
-      alert('No se pudo leer el devocional. Revisa que tu teléfono tenga una voz en español en Ajustes > Texto a voz.');
-    }
-  } finally {
-    if (run === nativeRun) {
-      nativeSpeaking = false;
-      onEnd?.();
-    }
+    if (current !== run) return;
+    reading = null;
+    alert('No se pudo leer el devocional. Revisa que tu teléfono tenga una voz en español en Ajustes > Texto a voz.');
   }
+}
+
+function playWeb(from) {
+  const current = ++run;
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  const { sentences } = reading;
+  for (let i = from; i < sentences.length; i++) {
+    const u = new SpeechSynthesisUtterance(sentences[i]);
+    u.rate = 0.95;
+    u.pitch = 1.0;
+    applyVoice(u);
+    u.onstart = () => {
+      if (current === run && reading) reading.index = i;
+    };
+    if (i === sentences.length - 1) {
+      u.onend = () => {
+        if (current === run) finishReading();
+      };
+    }
+    u.onerror = (e) => {
+      if (current === run && e.error !== 'interrupted' && e.error !== 'canceled') finishReading();
+    };
+    synth.speak(u);
+  }
+}
+
+function halt() {
+  run++;
+  if (isNative) RapVoice.stop().catch(() => {});
+  else if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 }
 
 // Las citas bíblicas se dicen completas: «Lucas 5:21» se leía «5:21 horas».
@@ -209,7 +253,7 @@ export const notificationService = {
       return false;
     }
 
-    this.stopSpeaking(); // Stop any ongoing speech
+    this.stopSpeaking();
 
     // Los días en espera solo tienen título, pasaje y versículo: se leen esos.
     const textToRead = [
@@ -222,25 +266,38 @@ export const notificationService = {
       devotional.prayer ? `Oración: ${devotional.prayer}` : null,
       devotional.closingDeclaration ? `Declaración final: ${devotional.closingDeclaration}` : null
     ].filter(Boolean).join(' ');
-    const speakable = speakableReferences(textToRead);
 
-    if (isNative) {
-      speakNative(speakable, onEnd);
-      return true;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(speakable);
-    utterance.rate = 0.95;
-    utterance.pitch = 1.0;
-    applyVoice(utterance);
-
-    if (onEnd) {
-      utterance.onend = onEnd;
-      utterance.onerror = onEnd;
-    }
-
-    window.speechSynthesis.speak(utterance);
+    reading = {
+      key: devotionalKey(devotional),
+      sentences: splitSentences(speakableReferences(textToRead)),
+      index: 0,
+      state: 'playing',
+      onEnd
+    };
+    if (isNative) playNative(0);
+    else playWeb(0);
     return true;
+  },
+
+  // Pausa guardando la frase en curso; resumeSpeaking la vuelve a empezar
+  pauseSpeaking() {
+    if (reading?.state !== 'playing') return;
+    reading.state = 'paused';
+    halt();
+  },
+
+  resumeSpeaking(onEnd) {
+    if (reading?.state !== 'paused') return;
+    reading.state = 'playing';
+    if (onEnd) reading.onEnd = onEnd;
+    if (isNative) playNative(reading.index);
+    else playWeb(reading.index);
+  },
+
+  // 'playing' | 'paused' | 'idle' para el devocional dado
+  playbackState(devotional) {
+    if (!reading || reading.key !== devotionalKey(devotional)) return 'idle';
+    return reading.state;
   },
 
   // Muestra breve al elegir una voz en Ajustes (solo navegador)
@@ -254,17 +311,11 @@ export const notificationService = {
   },
 
   stopSpeaking() {
-    if (isNative) {
-      nativeRun++;
-      nativeSpeaking = false;
-      RapVoice.stop().catch(() => {});
-    } else if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    reading = null;
+    halt();
   },
 
   isSpeaking() {
-    if (isNative) return nativeSpeaking;
-    return 'speechSynthesis' in window && window.speechSynthesis.speaking;
+    return reading?.state === 'playing';
   }
 };

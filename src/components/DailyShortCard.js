@@ -19,7 +19,7 @@ export function renderDailyShortCard(container, { dateStr }) {
     // manda fuera de la app (la de YouTube si está instalada, o el navegador).
     container.innerHTML = `
       <a class="short-card" href="${esc(short.url)}" target="_blank" rel="noopener">
-        <span class="short-play">${icons.play}</span>
+        <span class="short-play">${icons.youtube}</span>
         <span class="short-info">
           <span class="short-tag">Escucha el Salmo de hoy</span>
           <span class="short-title">${esc(titulo)}</span>

@@ -1,88 +1,115 @@
 <!doctype html>
+<!-- Generado por scripts/build-legal.js desde src/legal.js: no editar a mano -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Política de privacidad — RAP Oración</title>
 <meta name="description" content="Política de privacidad de la aplicación RAP Oración.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* Tema Bosque de la app (oscuro) y Marfil cuando el sistema está en claro */
   :root {
-    --bg: #f6f4ee; --card: #ffffff; --text: #1d2b25; --mute: #5b6a63;
-    --accent: #1f6b55; --line: #dcd8cc;
+    --bg: #0A1512; --surf: #222826; --line: rgba(255, 255, 255, .16);
+    --ink: #EDF3EF; --ink2: #9DB3A9; --ink3: #69837A; --acc: #7FC8A0;
+    --halo: radial-gradient(120% 80% at 50% -10%, rgba(127, 200, 160, .14), transparent 60%);
   }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg: #0a1512; --card: #11201b; --text: #e6efe9; --mute: #9db0a6; --accent: #5fd0a8; --line: #22362e; }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #F5F2EA; --surf: #FFFFFF; --line: rgba(24, 30, 26, .12);
+      --ink: #141A16; --ink2: #4F5A53; --ink3: #8A948D; --acc: #2E5D4B;
+      --halo: radial-gradient(120% 80% at 50% -10%, rgba(46, 93, 75, .08), transparent 60%);
+    }
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--halo), var(--bg); background-attachment: fixed; color: var(--ink);
+    font: 400 0.875rem/1.7 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
-  main { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
-  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 4px; }
-  h2 { font-size: 1.15rem; margin: 32px 0 8px; color: var(--accent); }
-  p, li { color: var(--text); }
-  .meta { color: var(--mute); font-size: .9rem; margin: 0 0 24px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 4px 20px 20px; }
-  ul { padding-left: 1.2rem; }
+  main { max-width: 640px; margin: 0 auto; padding: 36px 16px 64px; }
+  .tag { font-weight: 700; font-size: 0.6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); }
+  h1 { font: 400 2rem/1.15 'Newsreader', Georgia, serif; letter-spacing: -.01em; margin: 10px 0 6px; }
+  .meta { color: var(--ink3); font-size: 0.75rem; margin-bottom: 22px; }
+  .card { background: var(--surf); border: 1px solid var(--line); border-radius: 22px; padding: 6px 20px 20px; }
+  h2 { font-weight: 700; font-size: 0.65rem; letter-spacing: .14em; text-transform: uppercase; color: var(--acc); margin: 20px 0 6px; }
+  p, li { color: var(--ink2); }
+  p + p, ul + p { margin-top: 8px; }
+  ul { padding-left: 1.1rem; margin-top: 4px; }
   li { margin: 4px 0; }
-  a { color: var(--accent); }
-  footer { margin-top: 32px; color: var(--mute); font-size: .85rem; }
+  a { color: var(--acc); font-weight: 600; }
+  footer { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.8rem; }
 </style>
 </head>
 <body>
 <main>
+  <div class="tag">RAP Oración</div>
   <h1>Política de privacidad</h1>
-  <p class="meta">RAP Oración · Última actualización: 25 de octubre de 2026</p>
+  <p class="meta">Última actualización: 4 de noviembre de 2026</p>
 
   <div class="card">
-    <h2>Quién es el responsable</h2>
-    <p>La aplicación <strong>RAP Oración</strong> (en adelante, «RAP») es desarrollada y publicada por <strong>Medicode Solutions</strong>. Para cualquier duda sobre esta política, escríbenos a <a href="mailto:privacidad@medicode-solutions.com">privacidad@medicode-solutions.com</a>.</p>
-
-    <h2>En resumen</h2>
-    <p>RAP no te pide crear una cuenta, no pide tu correo ni tu teléfono y no envía lo que escribes a ningún servidor nuestro. Todo lo que registras en la aplicación se queda guardado en tu propio dispositivo.</p>
-
-    <h2>Qué información se guarda en tu dispositivo</h2>
-    <p>Mientras usas la aplicación, se guarda localmente en tu teléfono, tableta o navegador:</p>
-    <ul>
-      <li>Tus entradas diarias de oración, incluidos los nombres de las personas por las que oras, los motivos y tus notas personales.</li>
-      <li>Tus peticiones personales, las oraciones contestadas y tu lista de personas frecuentes.</li>
-      <li>Tu racha, tu progreso de lectura bíblica y los versículos que marcas como guardados.</li>
-      <li>Tus preferencias: nombre que elijas mostrar, tema de color, tamaño de texto, voz de lectura y hora del recordatorio.</li>
-    </ul>
-    <p>Esta información <strong>no sale de tu dispositivo</strong> y Medicode Solutions no tiene acceso a ella. Si borras los datos de la aplicación o del navegador, o la desinstalas, esa información se elimina y no podemos recuperarla.</p>
-
-    <h2>Copia de seguridad</h2>
-    <p>La opción «Copia» de Ajustes genera un archivo en tu dispositivo con tus datos, para que tú lo guardes donde quieras. Nosotros no recibimos ese archivo. Quien tenga acceso a él podrá leer su contenido, así que consérvalo en un lugar seguro.</p>
-
-    <h2>Permisos</h2>
-    <ul>
-      <li><strong>Notificaciones:</strong> solo si activas el recordatorio diario. Se programan en tu dispositivo y puedes desactivarlas en cualquier momento desde Ajustes o desde la configuración del sistema.</li>
-      <li>La lectura en voz alta usa la voz de síntesis de tu propio dispositivo.</li>
-      <li>RAP no usa tu ubicación, cámara, micrófono, contactos ni archivos.</li>
-    </ul>
-
-    <h2>Servicios de terceros</h2>
-    <ul>
-      <li><strong>Google Fonts:</strong> la aplicación puede cargar tipografías desde los servidores de Google. Al hacerlo, Google puede recibir datos técnicos como tu dirección IP. Consulta la política de privacidad de Google para más información.</li>
-      <li><strong>Enlaces externos:</strong> algunos versículos incluyen enlaces opcionales a la Biblia en línea (bible.com). Si los abres, sales de RAP y aplica la política de ese sitio.</li>
-    </ul>
-    <p>RAP no incluye publicidad, no usa herramientas de analítica y no comparte ni vende información a terceros.</p>
-
-    <h2>Menores de edad</h2>
-    <p>RAP no recopila datos personales de ningún usuario, incluidos los menores de edad. Los padres o tutores pueden revisar libremente lo que se guarda en el dispositivo de sus hijos.</p>
-
-    <h2>Tus derechos</h2>
-    <p>Como tus datos están solo en tu dispositivo, tú tienes el control total: puedes consultarlos, editarlos, exportarlos con «Copia» y borrarlos en cualquier momento eliminando los datos de la aplicación o desinstalándola.</p>
-
-    <h2>Cambios a esta política</h2>
-    <p>Si en el futuro la aplicación cambia la forma en que trata la información, actualizaremos esta página y la fecha de «Última actualización».</p>
-
-    <h2>Contacto</h2>
-    <p>Medicode Solutions · <a href="mailto:privacidad@medicode-solutions.com">privacidad@medicode-solutions.com</a></p>
+    <section>
+      <h2>Quién es el responsable</h2>
+      <p>La aplicación RAP Oración («RAP») es desarrollada y publicada por Medicode Solutions. Para cualquier duda sobre esta política, escríbenos a <a href="mailto:privacidad@medicode-solutions.com">privacidad@medicode-solutions.com</a>.</p>
+    </section>
+    <section>
+      <h2>En resumen</h2>
+      <p>RAP no te pide crear una cuenta, no pide tu correo ni tu teléfono y no envía lo que escribes a ningún servidor nuestro. Todo lo que registras en la aplicación se queda guardado en tu propio dispositivo.</p>
+    </section>
+    <section>
+      <h2>Qué información se guarda en tu dispositivo</h2>
+      <p>Mientras usas la aplicación, se guarda localmente en tu teléfono, tableta o navegador:</p>
+      <ul>
+        <li>Tus entradas diarias de oración, incluidos los nombres de las personas por las que oras, los motivos y tus notas personales.</li>
+        <li>Tus peticiones personales, las oraciones contestadas y tu lista de personas frecuentes.</li>
+        <li>Tu racha, tu progreso de lectura bíblica y los versículos que marcas como guardados.</li>
+        <li>Tus preferencias: nombre que elijas mostrar, tema de color, tamaño de texto, voz de lectura y hora del recordatorio.</li>
+      </ul>
+      <p>Esta información no sale de tu dispositivo y Medicode Solutions no tiene acceso a ella. Si borras los datos de la aplicación o del navegador, o la desinstalas, esa información se elimina y no podemos recuperarla.</p>
+    </section>
+    <section>
+      <h2>Copia de seguridad</h2>
+      <p>La opción «Copia» de Ajustes genera un archivo en tu dispositivo con tus datos, para que tú lo guardes donde quieras. Nosotros no recibimos ese archivo. Quien tenga acceso a él podrá leer su contenido, así que consérvalo en un lugar seguro.</p>
+    </section>
+    <section>
+      <h2>Permisos</h2>
+      <ul>
+        <li>Notificaciones: solo si activas el recordatorio diario. Se programan en tu dispositivo y puedes desactivarlas en cualquier momento desde Ajustes o desde la configuración del sistema.</li>
+        <li>La lectura en voz alta usa la voz de síntesis de tu propio dispositivo.</li>
+        <li>RAP no usa tu ubicación, cámara, micrófono, contactos ni archivos.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Servicios de terceros</h2>
+      <ul>
+        <li>Google Fonts: la aplicación puede cargar tipografías desde los servidores de Google. Al hacerlo, Google puede recibir datos técnicos como tu dirección IP.</li>
+        <li>Enlaces externos: algunos versículos enlazan a la Biblia en línea (bible.com) y la tarjeta del Salmo de hoy abre un video en YouTube. Si los abres, sales de RAP y aplica la política de ese sitio.</li>
+      </ul>
+      <p>RAP no incluye publicidad, no usa herramientas de analítica y no comparte ni vende información a terceros.</p>
+    </section>
+    <section>
+      <h2>Menores de edad</h2>
+      <p>RAP no recopila datos personales de ningún usuario, incluidos los menores de edad. Los padres o tutores pueden revisar libremente lo que se guarda en el dispositivo de sus hijos.</p>
+    </section>
+    <section>
+      <h2>Tus derechos</h2>
+      <p>Como tus datos están solo en tu dispositivo, tú tienes el control total: puedes consultarlos, editarlos, exportarlos con «Copia» y borrarlos en cualquier momento eliminando los datos de la aplicación o desinstalándola.</p>
+    </section>
+    <section>
+      <h2>Cambios a esta política</h2>
+      <p>Si en el futuro la aplicación cambia la forma en que trata la información, actualizaremos esta política y la fecha de «Última actualización».</p>
+    </section>
+    <section>
+      <h2>Contacto</h2>
+      <p>Medicode Solutions · <a href="mailto:privacidad@medicode-solutions.com">privacidad@medicode-solutions.com</a></p>
+    </section>
   </div>
 
-  <footer><a href="./">Volver a RAP Oración</a></footer>
+  <footer>
+    <a href="./terminos.html">Términos y condiciones</a>
+    <a href="./">Volver a RAP Oración</a>
+  </footer>
 </main>
 </body>
 </html>

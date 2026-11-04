@@ -32,6 +32,12 @@ export const icons = {
 
   play: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 3.2v9.6c0 .5.5.8.9.5l7.2-4.8a.6.6 0 0 0 0-1L5.9 2.7c-.4-.3-.9 0-.9.5Z" fill="currentColor"/></svg>`,
 
+  pause: `<svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="3.2" y="2.5" width="2.6" height="9" rx=".8"/><rect x="8.2" y="2.5" width="2.6" height="9" rx=".8"/></svg>`,
+
+  stop: `<svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="8" height="8" rx="1.6"/></svg>`,
+
+  youtube: `<svg width="26" height="18" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5.5" fill="#FF0000"/><path d="M11.2 5.8v8.4l7.2-4.2-7.2-4.2Z" fill="#FFFFFF"/></svg>`,
+
   external: `<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1.8h3.2V5M10.2 1.8 5.6 6.4M9 7.4v2c0 .5-.4.8-.8.8H2.6a.8.8 0 0 1-.8-.8V3.8c0-.5.4-.8.8-.8h2"/></svg>`,
 
   starOutline: `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 2.8 2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 8.1l5-.7L10 2.8Z" stroke-linejoin="round"/></svg>`,

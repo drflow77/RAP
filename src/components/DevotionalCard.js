@@ -13,13 +13,28 @@ export function renderDevotionalCard(container, devotional, { onOpenPassage } = 
     return;
   }
 
-  const isSpeaking = notificationService.isSpeaking();
+  // Textos del botón de audio según el estado de la lectura
+  const AUDIO = {
+    idle: { icon: icons.speaker, label: 'Escuchar devocional' },
+    playing: { icon: icons.pause, label: 'Pausar' },
+    paused: { icon: icons.play, label: 'Continuar' }
+  };
+  const audioState = notificationService.playbackState(devotional);
 
   container.innerHTML = `
     <div class="devotional-card">
       <div class="devotional-head">
         <div class="devotional-theme">${esc(devotional.theme)}</div>
         <h2 class="devotional-title">${esc(devotional.title)}</h2>
+        <div class="audio-controls">
+          <button id="btn-audio-listen" class="audio-btn ${audioState !== 'idle' ? 'active' : ''}">
+            <span class="audio-icon">${AUDIO[audioState].icon}</span>
+            <span id="audio-text">${AUDIO[audioState].label}</span>
+          </button>
+          <button id="btn-audio-stop" class="audio-stop" ${audioState === 'idle' ? 'hidden' : ''} aria-label="Detener y volver al inicio" title="Detener">
+            ${icons.stop}
+          </button>
+        </div>
         ${devotional.pending ? '<span class="pending-tag">Devocional en espera</span>' : ''}
       </div>
 
@@ -41,41 +56,41 @@ export function renderDevotionalCard(container, devotional, { onOpenPassage } = 
           </p>
         </div>` : ''}
 
-        ${devotional.reflection ? `<p class="reflection-body">${esc(devotional.reflection)}</p>` : ''}
+        ${devotional.reflection ? `
+        <div class="reflection-box">
+          <span class="section-label">Reflexión</span>
+          <p class="reflection-body">${esc(devotional.reflection)}</p>
+        </div>` : ''}
 
         ${devotional.declaration ? `
         <div class="declaration-box">
-          <span class="declaration-icon">${icons.star}</span>
-          <p class="declaration-text"><strong>Declaro hoy:</strong> ${esc(devotional.declaration)}</p>
+          <span class="section-label">${icons.star} Declaro hoy</span>
+          <p class="declaration-text">${esc(devotional.declaration)}</p>
         </div>` : ''}
 
         ${devotional.prayerPrompt ? `
         <div class="write-box">
-          <span class="write-label">${icons.pen} Para escribir</span>
+          <span class="section-label">${icons.pen} Para escribir</span>
           <p class="write-text">${esc(devotional.prayerPrompt)}</p>
         </div>` : ''}
 
         ${devotional.prayer ? `
         <div class="prayer-box">
-          <span class="prayer-label">Oración</span>
+          <span class="section-label">Oración</span>
           <p class="prayer-text">“${esc(devotional.prayer)}”</p>
         </div>` : ''}
 
         ${devotional.closingDeclaration ? `
         <div class="closing-box">
-          <span class="closing-label">${icons.star} Declaración final</span>
+          <span class="section-label">${icons.star} Declaración final</span>
           <p class="closing-text">“${esc(devotional.closingDeclaration)}”</p>
           ${devotional.closingPassage ? `<span class="closing-passage">${esc(devotional.closingPassage)}</span>` : ''}
         </div>` : ''}
 
         <div class="card-footer-actions">
-          <button id="btn-audio-listen" class="action-pill-btn ${isSpeaking ? 'active' : ''}">
-            ${icons.speaker}
-            <span id="audio-text">${isSpeaking ? 'Reproduciendo…' : 'Escuchar devocional'}</span>
-          </button>
-
-          <button id="btn-share-devotional" class="action-square-btn" title="Compartir" aria-label="Compartir devocional">
+          <button id="btn-share-devotional" class="action-pill-btn">
             ${icons.share}
+            <span>Compartir devocional</span>
           </button>
         </div>
       </div>
@@ -87,24 +102,34 @@ export function renderDevotionalCard(container, devotional, { onOpenPassage } = 
     onOpenPassage(devotional.passage);
   });
 
-  // Audio Reading Handler
+  // Audio: escuchar → pausar → continuar donde se quedó; ■ detiene
   const audioBtn = container.querySelector('#btn-audio-listen');
-  const audioText = container.querySelector('#audio-text');
+  const stopBtn = container.querySelector('#btn-audio-stop');
+
+  // Se buscan los botones cada vez: si la tarjeta se volvió a pintar
+  // mientras leía, al terminar se actualiza la tarjeta nueva.
+  const paintAudio = () => {
+    const audioBtn = container.querySelector('#btn-audio-listen');
+    const stopBtn = container.querySelector('#btn-audio-stop');
+    if (!audioBtn || !stopBtn) return;
+    const state = notificationService.playbackState(devotional);
+    audioBtn.classList.toggle('active', state !== 'idle');
+    audioBtn.querySelector('.audio-icon').innerHTML = AUDIO[state].icon;
+    audioBtn.querySelector('#audio-text').textContent = AUDIO[state].label;
+    stopBtn.hidden = state === 'idle';
+  };
 
   audioBtn?.addEventListener('click', () => {
-    if (notificationService.isSpeaking()) {
-      notificationService.stopSpeaking();
-      audioBtn.classList.remove('active');
-      audioText.textContent = 'Escuchar devocional';
-    } else {
-      audioBtn.classList.add('active');
-      audioText.textContent = 'Reproduciendo…';
+    const state = notificationService.playbackState(devotional);
+    if (state === 'playing') notificationService.pauseSpeaking();
+    else if (state === 'paused') notificationService.resumeSpeaking(paintAudio);
+    else notificationService.speakDevotional(devotional, paintAudio);
+    paintAudio();
+  });
 
-      notificationService.speakDevotional(devotional, () => {
-        audioBtn.classList.remove('active');
-        audioText.textContent = 'Escuchar devocional';
-      });
-    }
+  stopBtn?.addEventListener('click', () => {
+    notificationService.stopSpeaking();
+    paintAudio();
   });
 
   // Share Devotional Handler

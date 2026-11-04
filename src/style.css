@@ -449,6 +449,56 @@ button:active {
   text-wrap: pretty;
 }
 
+/* Escuchar / Pausar / Continuar, a la vista desde el inicio del devocional */
+.audio-controls {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px 10px 12px;
+  border-radius: 999px;
+  border: none;
+  background: var(--acc);
+  color: var(--accInk);
+  font: 700 0.8125rem var(--font-sans);
+  cursor: pointer;
+}
+
+.audio-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .14);
+}
+
+.audio-btn.active {
+  background: var(--accSoft);
+  color: var(--acc);
+  box-shadow: inset 0 0 0 1px var(--acc);
+}
+
+.audio-btn.active .audio-icon { background: var(--accSoft); }
+
+.audio-stop {
+  width: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink2);
+  cursor: pointer;
+}
+
+.audio-stop[hidden] { display: none; }
+
 .devotional-body {
   padding: 0 20px 20px;
   display: flex;
@@ -479,9 +529,34 @@ button:active {
   color: var(--acc);
 }
 
-.reflection-body {
+/* Tipografía del devocional: la Palabra (versículo) y la Oración van en
+   cursiva serif para resaltar; todo lo demás comparte un mismo texto sans
+   con una etiqueta en mayúsculas encima. */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 0.625rem var(--font-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.reflection-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reflection-body,
+.declaration-text,
+.write-text,
+.closing-text {
   font: 400 0.875rem/1.7 var(--font-sans);
-  color: var(--ink2);
+  color: var(--ink);
+}
+
+.reflection-body {
   text-align: justify;
   text-justify: inter-word;
   hyphens: auto;
@@ -495,25 +570,8 @@ button:active {
   border-radius: 16px;
   border: 1px dashed var(--line);
   display: flex;
-  gap: 11px;
-  align-items: flex-start;
-}
-
-.declaration-icon {
-  flex: none;
-  margin-top: 2px;
-  color: var(--acc);
-  display: block;
-}
-
-.declaration-text {
-  font: 500 0.8125rem/1.55 var(--font-sans);
-  color: var(--ink);
-}
-
-.declaration-text strong {
-  color: var(--acc);
-  font-weight: 700;
+  flex-direction: column;
+  gap: 6px;
 }
 
 /* Declaración que cierra una serie de días (p. ej. los "5 días apartados"
@@ -528,20 +586,6 @@ button:active {
   gap: 8px;
 }
 
-.closing-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font: 700 0.625rem var(--font-sans);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--acc);
-}
-
-.closing-text {
-  font: 600 0.875rem/1.6 var(--font-sans);
-  color: var(--ink);
-}
 
 .closing-passage {
   align-self: flex-end;
@@ -591,20 +635,7 @@ button:active {
   gap: 6px;
 }
 
-.write-label,
-.prayer-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font: 700 0.625rem var(--font-sans);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--acc);
-}
-
 .write-text {
-  font: 500 0.8125rem/1.6 var(--font-sans);
-  color: var(--ink);
   text-align: justify;
   hyphens: auto;
   -webkit-hyphens: auto;
@@ -615,9 +646,8 @@ button:active {
 }
 
 .prayer-text {
-  font: 400 0.8125rem/1.7 var(--font-serif, var(--font-sans));
-  font-style: italic;
-  color: var(--ink2, var(--ink));
+  font: italic 300 1.0625rem/1.6 var(--font-serif);
+  color: var(--ink);
   text-align: justify;
   hyphens: auto;
   -webkit-hyphens: auto;
@@ -666,8 +696,8 @@ button:active {
 .memory-verse-card {
   border-radius: 22px;
   padding: 18px;
-  background: var(--surf);
-  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--accSoft), transparent), var(--surf);
+  border: 1.5px solid var(--acc);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -684,7 +714,7 @@ button:active {
   font: 600 0.5938rem/1 var(--font-sans);
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--acc);
 }
 
 .memory-status-badge {
@@ -1821,7 +1851,42 @@ select.settings-row-value {
 
 .nav-center:active .nav-center-img {
   transform: scale(.94);
+  animation: none;
 }
+
+/* Al pasar el cursor el halo se vuelve rojo y late como un corazón
+   (pum-pum… pausa). Solo en equipos con cursor: en el teléfono no hay
+   «pasar encima» y el halo se queda azul y quieto. */
+@media (hover: hover) {
+  .nav-center:hover:not(:active) .nav-center-img {
+    animation: heartbeat 1.6s ease-in-out infinite;
+  }
+}
+
+/* Teléfono: dos latidos al abrir la app y al tocar el logo (ver main.js) */
+.nav-center.beating .nav-center-img {
+  animation: heartbeat 1.6s ease-in-out 2;
+}
+
+@keyframes heartbeat {
+  0%, 40%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 16px 3px rgba(255, 59, 74, .45), 0 6px 18px rgba(0, 0, 0, .35);
+  }
+  12% {
+    transform: scale(1.1);
+    box-shadow: 0 0 26px 9px rgba(255, 59, 74, .7), 0 6px 18px rgba(0, 0, 0, .35);
+  }
+  20% {
+    transform: scale(1.02);
+    box-shadow: 0 0 18px 4px rgba(255, 59, 74, .5), 0 6px 18px rgba(0, 0, 0, .35);
+  }
+  28% {
+    transform: scale(1.07);
+    box-shadow: 0 0 24px 7px rgba(255, 59, 74, .62), 0 6px 18px rgba(0, 0, 0, .35);
+  }
+}
+
 
 .nav-item span {
   max-width: 100%;
@@ -2956,7 +3021,6 @@ select.bible-version-chip {
   text-decoration: none;
 }
 
-.short-card:hover { border-color: var(--acc); }
 
 .short-play {
   flex: none;
@@ -2965,9 +3029,10 @@ select.bible-version-chip {
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  background: var(--accSoft);
-  color: var(--acc);
+  background: rgba(255, 0, 0, .1);
 }
+
+.short-card:hover { border-color: #FF0000; }
 
 .short-info {
   flex: 1;
@@ -3051,6 +3116,62 @@ select.bible-version-chip {
 
 .settings-about a { color: var(--acc); font-weight: 600; }
 
+.legal-links {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.legal-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font: 600 0.8125rem var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.legal-link span { color: var(--ink3); font-size: 1rem; }
+
+.legal-back {
+  border: none;
+  background: transparent;
+  color: var(--acc);
+  font: 700 0.8125rem var(--font-sans);
+  cursor: pointer;
+}
+
+.legal-doc { gap: 0; }
+
+.legal-doc section + section { margin-top: 16px; }
+
+.legal-h {
+  margin-bottom: 6px;
+  font: 700 0.625rem var(--font-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.legal-doc p,
+.legal-doc li {
+  font: 400 0.8125rem/1.65 var(--font-sans);
+  color: var(--ink2);
+}
+
+.legal-doc p + p,
+.legal-doc ul + p { margin-top: 8px; }
+
+.legal-doc ul { padding-left: 1.1rem; margin-top: 4px; }
+
+.legal-doc li { margin: 4px 0; }
+
 .changelog {
   margin-top: 10px;
   text-align: left;
@@ -3069,6 +3190,20 @@ select.bible-version-chip {
   flex: none;
   border-radius: 50%;
   box-shadow: 0 0 8px 1px rgba(94, 182, 240, .45);
+}
+
+/* El mismo latido rojo que el botón central, en tamaño de barra lateral */
+@media (hover: hover) {
+  .side-nav-item:hover .side-nav-logo {
+    animation: heartbeat-small 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes heartbeat-small {
+  0%, 40%, 100% { transform: scale(1); box-shadow: 0 0 8px 1px rgba(255, 59, 74, .45); }
+  12% { transform: scale(1.15); box-shadow: 0 0 14px 4px rgba(255, 59, 74, .7); }
+  20% { transform: scale(1.03); box-shadow: 0 0 9px 2px rgba(255, 59, 74, .5); }
+  28% { transform: scale(1.1); box-shadow: 0 0 12px 3px rgba(255, 59, 74, .62); }
 }
 
 /* Logo genérico (solo versión nativa de Android): imagen a color, no máscara */

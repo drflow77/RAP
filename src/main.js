@@ -108,6 +108,11 @@ function setTheme(themeKey) {
 // Navegación inferior. Racha no tiene pestaña propia: con Biblia ya no cabían
 // seis en un teléfono, y se abre tocando el contador de la llama del encabezado.
 // Biblia va al centro, destacada con el logo del canal Palabra Vida Abundante.
+// En el teléfono no hay «pasar el cursor», así que el logo late en rojo un par
+// de veces al abrir la app y al tocarlo. La barra se vuelve a crear en cada
+// render, por eso el latido pendiente se guarda aquí.
+let bibleHeartbeat = true;
+
 function renderBottomNav() {
   const appIcon = `<img class="nav-center-img" src="${import.meta.env.BASE_URL}icons/nav-biblia.svg" alt="" aria-hidden="true">`;
   const tabs = [
@@ -121,15 +126,17 @@ function renderBottomNav() {
   const navEl = document.createElement('nav');
   navEl.className = 'bottom-nav';
   navEl.innerHTML = tabs.map((t) => `
-    <button class="nav-item ${t.center ? 'nav-center' : ''} ${appState.currentTab === t.key ? 'active' : ''}" data-tab="${t.key}">
+    <button class="nav-item ${t.center ? 'nav-center' : ''} ${t.center && bibleHeartbeat ? 'beating' : ''} ${appState.currentTab === t.key ? 'active' : ''}" data-tab="${t.key}">
       ${t.icon}
       <span>${t.label}</span>
     </button>
   `).join('');
+  bibleHeartbeat = false;
 
   navEl.querySelectorAll('.nav-item').forEach((btn) => {
     btn.addEventListener('click', () => {
       const key = btn.getAttribute('data-tab');
+      if (key === 'bible') bibleHeartbeat = true;
       // Ajustes abre la hoja modal; no es una pestaña de contenido como las demás.
       if (key === 'settings') {
         appState.isSettingsOpen = true;
@@ -526,6 +533,7 @@ async function renderApp() {
       currentDate: appState.currentDate,
       onClose: () => {
         appState.isWelcomeOpen = false;
+        bibleHeartbeat = true;
         renderApp();
       }
     });

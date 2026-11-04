@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import com.getcapacitor.JSArray;
+import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -57,7 +58,15 @@ public class RapVoicePlugin extends Plugin implements TextToSpeech.OnInitListene
         tts.setAudioAttributes(attributes);
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
-            public void onStart(String utteranceId) {}
+            public void onStart(String utteranceId) {
+                // Avisa a JS qué frase va leyendo, para poder continuar ahí tras una pausa
+                String[] parts = utteranceId.split(":");
+                if (parts.length == 2 && parts[0].equals(String.valueOf(run))) {
+                    JSObject data = new JSObject();
+                    data.put("index", Integer.parseInt(parts[1]));
+                    notifyListeners("progress", data);
+                }
+            }
 
             @Override
             public void onDone(String utteranceId) {
@@ -150,6 +159,7 @@ public class RapVoicePlugin extends Plugin implements TextToSpeech.OnInitListene
 
     // Termina la lectura en curso (si la hay), suelta el foco de audio y
     // resuelve la llamada de JS para que el botón vuelva a su estado.
+    // `completed` dice si llegó al final o se interrumpió (pausa, llamada).
     private synchronized void finish(boolean completed) {
         PluginCall call = current;
         current = null;
@@ -157,7 +167,9 @@ public class RapVoicePlugin extends Plugin implements TextToSpeech.OnInitListene
         if (!completed && tts != null) tts.stop();
         abandonFocus();
         if (call != null) {
-            call.resolve();
+            JSObject result = new JSObject();
+            result.put("completed", completed);
+            call.resolve(result);
             call.release(getBridge());
         }
     }

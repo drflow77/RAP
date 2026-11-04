@@ -3,6 +3,17 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.3.5',
+    date: '2026-11-04',
+    changes: [
+      'Escuchar devocional: el botón está arriba, junto al título; «Pausar» y «Continuar» siguen donde se quedó la lectura, y ■ la detiene',
+      'Devocional con una sola letra para reflexión, «Declaro hoy», «Para escribir» y declaración final; el versículo y la oración resaltan en cursiva',
+      'Ajustes › Acerca de: nuevos «Términos y condiciones» y la «Política de privacidad», que ahora se leen dentro de la app con su mismo estilo',
+      'Tarjeta del Salmo de hoy con el logo de YouTube en rojo; la cita del mes lleva contorno para distinguirse',
+      'El logo de la Biblia late como un corazón con halo rojo: al pasar el cursor en computadora, y al entrar a la app o tocarlo en el teléfono'
+    ]
+  },
+  {
     version: '1.3.4',
     date: '2026-11-03',
     changes: [
