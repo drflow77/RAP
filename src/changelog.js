@@ -3,6 +3,14 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.4.0',
+    date: '2026-11-12',
+    changes: [
+      'Ajustes › Acerca de: texto más corto, con la frase «Cada desafío se transforma en aprendizaje…» (Rom 8:28)',
+      'Nueva hoja «Compartir RAP» con código QR para que otra persona la instale: Google Play en Android, y la versión web para iPhone y computadora; botones para compartir o copiar el enlace'
+    ]
+  },
+  {
     version: '1.3.5',
     date: '2026-11-04',
     changes: [

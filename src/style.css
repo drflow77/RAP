@@ -3139,6 +3139,39 @@ select.bible-version-chip {
 
 .legal-link span { color: var(--ink3); font-size: 1rem; }
 
+/* Frase final de Acerca de */
+.about-quote {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--acc);
+  border-radius: 10px;
+  background: var(--accSoft);
+  font: italic 400 0.875rem/1.55 var(--font-serif);
+  color: var(--ink);
+}
+
+/* Compartir RAP: el QR va siempre sobre blanco para que la cámara lo lea en
+   cualquier tema */
+.share-doc { align-items: stretch; text-align: center; }
+.share-tabs .text-scale-option { font: 600 0.8125rem var(--font-sans); padding: 10px 4px; justify-content: center; }
+.share-qr {
+  width: min(240px, 70vw);
+  margin: 14px auto 4px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 1px 0 var(--line), 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.share-qr svg { display: block; width: 100%; height: auto; }
+.share-qr-hint { margin-top: 6px; }
+.share-qr-url {
+  margin-top: 4px;
+  font: 500 0.75rem var(--font-sans);
+  color: var(--acc);
+  word-break: break-all;
+}
+.share-actions { margin-top: 12px; }
+
 .legal-back {
   border: none;
   background: transparent;

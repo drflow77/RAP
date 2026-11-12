@@ -7,13 +7,13 @@ import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { CHANGELOG, APP_VERSION } from '../changelog.js';
 import { LEGAL } from '../legal.js';
+import { ABOUT_QUOTE, LINKS, SHARE_TEXT } from '../about.js';
+import { QR } from '../qrCodes.js';
+import { Share } from '@capacitor/share';
 
-// Términos o privacidad dentro de la misma hoja, con el estilo de la app.
+// Hoja secundaria dentro de la misma hoja de ajustes, con el estilo de la app.
 // «‹ Ajustes» vuelve a la hoja de ajustes.
-function renderLegalSheet(container, key, props) {
-  const doc = LEGAL[key];
-  const paras = (list = []) => list.map((t) => `<p>${esc(t)}</p>`).join('');
-
+function renderSubSheet(container, props, { title, hint, body, onReady }) {
   container.innerHTML = `
     <div class="modal-backdrop" id="modal-backdrop-el">
       <div class="sheet" id="modal-content-el">
@@ -25,20 +25,11 @@ function renderLegalSheet(container, key, props) {
         </div>
 
         <div>
-          <h3 class="sheet-title">${esc(doc.title)}</h3>
-          <div class="settings-hint">RAP Oración · Última actualización: ${esc(doc.updated)}</div>
+          <h3 class="sheet-title">${esc(title)}</h3>
+          ${hint ? `<div class="settings-hint">${esc(hint)}</div>` : ''}
         </div>
 
-        <div class="settings-block legal-doc">
-          ${doc.sections.map((s) => `
-            <section>
-              <h4 class="legal-h">${esc(s.h)}</h4>
-              ${paras(s.p)}
-              ${s.li ? `<ul>${s.li.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
-              ${paras(s.after)}
-            </section>
-          `).join('')}
-        </div>
+        ${body}
       </div>
     </div>
   `;
@@ -49,6 +40,104 @@ function renderLegalSheet(container, key, props) {
   });
   container.querySelector('#btn-close-settings')?.addEventListener('click', props.onClose);
   container.querySelector('#btn-legal-back')?.addEventListener('click', () => renderSettingsModal(container, props));
+  onReady?.(container);
+}
+
+// Términos o privacidad
+function renderLegalSheet(container, key, props) {
+  const doc = LEGAL[key];
+  const paras = (list = []) => list.map((t) => `<p>${esc(t)}</p>`).join('');
+
+  renderSubSheet(container, props, {
+    title: doc.title,
+    hint: `RAP Oración · Última actualización: ${doc.updated}`,
+    body: `
+      <div class="settings-block legal-doc">
+        ${doc.sections.map((s) => `
+          <section>
+            <h4 class="legal-h">${esc(s.h)}</h4>
+            ${paras(s.p)}
+            ${s.li ? `<ul>${s.li.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+            ${paras(s.after)}
+          </section>
+        `).join('')}
+      </div>
+    `
+  });
+}
+
+// Compartir RAP: código QR para escanear con otro teléfono y botón de compartir.
+// En iPhone no hay Play Store, así que su QR lleva a la versión web (se instala
+// desde Safari); en Android y en la app nativa se muestra primero Google Play.
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+function renderShareSheet(container, props) {
+  const options = [
+    { key: 'play', label: 'Android', hint: 'Escanéalo con la cámara para abrir RAP en Google Play' },
+    { key: 'web', label: 'iPhone y PC', hint: 'Abre RAP en el navegador; en iPhone, en Safari toca Compartir › «Agregar a inicio»' }
+  ];
+  const initial = !isNative && isIOS ? 'web' : 'play';
+
+  renderSubSheet(container, props, {
+    title: 'Compartir RAP',
+    hint: 'Muéstrale este código a otra persona para que instale la app',
+    body: `
+      <div class="settings-block share-doc">
+        <div class="text-scale-options share-tabs" role="tablist">
+          ${options.map((o) => `
+            <button class="text-scale-option${o.key === initial ? ' active' : ''}" role="tab" data-qr="${o.key}">${esc(o.label)}</button>
+          `).join('')}
+        </div>
+        <div class="share-qr" id="share-qr" aria-label="Código QR"></div>
+        <div class="settings-hint share-qr-hint" id="share-qr-hint"></div>
+        <div class="share-qr-url" id="share-qr-url"></div>
+        <div class="settings-actions share-actions">
+          <button id="btn-share-app" class="ghost-btn">${icons.share} Compartir enlace</button>
+          <button id="btn-copy-app" class="ghost-btn">Copiar enlace</button>
+        </div>
+      </div>
+    `,
+    onReady: (root) => {
+      let current = initial;
+      const show = (key) => {
+        current = key;
+        const opt = options.find((o) => o.key === key);
+        root.querySelector('#share-qr').innerHTML = QR[key];
+        root.querySelector('#share-qr-hint').textContent = opt.hint;
+        root.querySelector('#share-qr-url').textContent = LINKS[key];
+        root.querySelectorAll('[data-qr]').forEach((b) => b.classList.toggle('active', b.getAttribute('data-qr') === key));
+      };
+      show(initial);
+      root.querySelectorAll('[data-qr]').forEach((b) => b.addEventListener('click', () => show(b.getAttribute('data-qr'))));
+
+      root.querySelector('#btn-share-app')?.addEventListener('click', async () => {
+        const data = { title: 'RAP Oración', text: SHARE_TEXT };
+        try {
+          if (isNative) {
+            await Share.share({ ...data, dialogTitle: 'Compartir RAP' });
+          } else if (navigator.share) {
+            await navigator.share(data);
+          } else {
+            await navigator.clipboard.writeText(SHARE_TEXT);
+            alert('Enlaces copiados para compartir.');
+          }
+        } catch {
+          // Compartir cancelado
+        }
+      });
+
+      const copyBtn = root.querySelector('#btn-copy-app');
+      copyBtn?.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(LINKS[current]);
+          copyBtn.textContent = 'Copiado ✓';
+        } catch {
+          alert(LINKS[current]);
+        }
+      });
+    }
+  });
 }
 
 export function renderSettingsModal(container, props) {
@@ -180,9 +269,11 @@ export function renderSettingsModal(container, props) {
           </div>
           <div class="settings-about">
             <p>Diario de oración con el método RAP: <strong>Relación</strong> (el devocional del día), <strong>Amor</strong> (tres personas por quienes orar) y <strong>Petición</strong> (tu petición personal).</p>
-            <p>Inspirado en la metodología de oración de Ensancha Guatemala. Desarrollada por Medicode Solutions.</p>
+            <p>Desarrollada por Medicode Solutions.</p>
+            <blockquote class="about-quote">${esc(ABOUT_QUOTE)}</blockquote>
           </div>
           <div class="legal-links">
+            <button class="legal-link" id="btn-share-sheet">Compartir RAP · código QR <span aria-hidden="true">›</span></button>
             <button class="legal-link" data-legal="terminos">Términos y condiciones <span aria-hidden="true">›</span></button>
             <button class="legal-link" data-legal="privacidad">Política de privacidad <span aria-hidden="true">›</span></button>
           </div>
@@ -206,9 +297,10 @@ export function renderSettingsModal(container, props) {
   });
   container.querySelector('#btn-close-settings')?.addEventListener('click', onClose);
 
-  container.querySelectorAll('.legal-link').forEach((btn) => {
+  container.querySelectorAll('.legal-link[data-legal]').forEach((btn) => {
     btn.addEventListener('click', () => renderLegalSheet(container, btn.getAttribute('data-legal'), props));
   });
+  container.querySelector('#btn-share-sheet')?.addEventListener('click', () => renderShareSheet(container, props));
 
   // Tema: se aplica al instante y se persiste
   container.querySelectorAll('.theme-swatch').forEach((btn) => {
