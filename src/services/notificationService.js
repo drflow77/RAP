@@ -328,9 +328,13 @@ export const notificationService = {
     window.speechSynthesis.speak(utterance);
   },
 
+  // Avisa a la lectura que se detiene (onEnd), para que su botón vuelva a
+  // «Escuchar» aunque la haya cortado otra lectura nueva
   stopSpeaking() {
+    const onEnd = reading?.onEnd;
     reading = null;
     halt();
+    onEnd?.();
   },
 
   isSpeaking() {

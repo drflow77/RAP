@@ -1,5 +1,7 @@
 // MonthlyMemoryVerse Component — 12 citas bíblicas para memorizar al año (una por mes)
 import { esc } from './escape.js';
+import { icons } from './icons.js';
+import { notificationService } from '../services/notificationService.js';
 
 export const MONTHLY_MEMORY_VERSES = [
   {
@@ -110,6 +112,66 @@ function toPracticeText(text) {
     .join(' ');
 }
 
+// Escuchar la cita: una vez, o tres seguidas para aprenderla de oído (hay
+// quien ya no ve bien la letra y prefiere memorizar escuchando).
+const audioKey = (item, times) => `memory:${item.month}:${times}`;
+
+function speechText(item, times) {
+  const once = `${item.verse} ${item.passage}.`;
+  if (times === 1) return once;
+  return [once, 'Otra vez.', once, 'Una vez más.', once].join(' ');
+}
+
+function memoryAudioState(item) {
+  for (const times of [1, 3]) {
+    if (notificationService.playbackState(audioKey(item, times)) !== 'idle') return times;
+  }
+  return 0;
+}
+
+function memoryAudioControls(item) {
+  if (memoryAudioState(item)) {
+    return `
+      <button class="audio-stop" data-memory-audio="stop" title="Detener">
+        ${icons.stop}<span>Detener</span>
+      </button>
+    `;
+  }
+  return `
+    <button class="audio-btn" data-memory-audio="1">
+      <span class="audio-icon">${icons.speaker}</span>
+      <span>Escuchar</span>
+    </button>
+    <button class="audio-btn outline" data-memory-audio="3">
+      <span class="audio-icon">${icons.repeat}</span>
+      <span>Repetir 3 veces</span>
+    </button>
+  `;
+}
+
+function bindMemoryAudio(container, item) {
+  const box = container.querySelector('.memory-audio');
+  if (!box) return;
+  // Se busca la tarjeta cada vez: pudo redibujarse mientras leía
+  const paint = () => {
+    const current = container.querySelector('.memory-audio');
+    if (!current) return;
+    current.innerHTML = memoryAudioControls(item);
+    bindMemoryAudio(container, item);
+  };
+  box.querySelectorAll('[data-memory-audio]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const action = btn.getAttribute('data-memory-audio');
+      if (action === 'stop') notificationService.stopSpeaking();
+      else {
+        const times = Number(action);
+        notificationService.speakText(audioKey(item, times), speechText(item, times), paint);
+      }
+      paint();
+    });
+  });
+}
+
 export function renderMonthlyMemoryVerse(container, { currentDate, onMemorizedToggle }) {
   const currentMonth = currentDate.getMonth() + 1;
   const item = getMemoryVerseForMonth(currentMonth);
@@ -129,6 +191,8 @@ export function renderMonthlyMemoryVerse(container, { currentDate, onMemorizedTo
 
       <p class="memory-verse-quote">${isPracticing ? toPracticeText(item.verse) : `“${esc(item.verse)}”`}</p>
 
+      <div class="audio-controls memory-audio">${memoryAudioControls(item)}</div>
+
       <div class="memory-actions">
         <span class="memory-verse-passage">${esc(item.passage)}</span>
         <button id="btn-practice-hide" class="link-btn">
@@ -137,6 +201,8 @@ export function renderMonthlyMemoryVerse(container, { currentDate, onMemorizedTo
       </div>
     </div>
   `;
+
+  bindMemoryAudio(container, item);
 
   container.querySelector('#btn-toggle-memorized')?.addEventListener('click', () => {
     const updated = !isMemorized;

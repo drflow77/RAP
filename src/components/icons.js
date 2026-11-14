@@ -34,6 +34,8 @@ export const icons = {
 
   pause: `<svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="3.2" y="2.5" width="2.6" height="9" rx=".8"/><rect x="8.2" y="2.5" width="2.6" height="9" rx=".8"/></svg>`,
 
+  repeat: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.2V5.4c0-1.1.9-2 2-2h7M9.6 1.5l1.9 1.9-1.9 1.9M11.5 7.8v.8c0 1.1-.9 2-2 2h-7M4.4 12.5l-1.9-1.9 1.9-1.9"/></svg>`,
+
   stop: `<svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="8" height="8" rx="1.6"/></svg>`,
 
   youtube: `<svg width="26" height="18" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5.5" fill="#FF0000"/><path d="M11.2 5.8v8.4l7.2-4.2-7.2-4.2Z" fill="#FFFFFF"/></svg>`,

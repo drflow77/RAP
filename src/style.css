@@ -544,6 +544,23 @@ button:active {
 
 .audio-stop[hidden] { display: none; }
 
+/* Botón secundario (Repetir 3 veces): mismo verde, solo con contorno */
+.audio-btn.outline {
+  background: transparent;
+  color: var(--play);
+}
+
+.audio-btn.outline .audio-icon { background: var(--playSoft); }
+
+/* Cita del mes: los botones van entre la cita y su referencia */
+.memory-audio { margin-top: 4px; }
+
+.memory-audio .audio-btn,
+.memory-audio .audio-stop {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
 /* En la Biblia va justo debajo de la barra del capítulo */
 .bible-audio { margin-top: 0; }
 

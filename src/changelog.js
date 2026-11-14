@@ -3,6 +3,14 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.6.0',
+    date: '2026-11-14',
+    changes: [
+      'Cita del mes: botones «Escuchar» y «Repetir 3 veces» para aprenderla de oído; mientras suena, un solo botón rojo «Detener»',
+      'Al empezar a escuchar algo nuevo, el botón de lo que sonaba antes vuelve solo a «Escuchar»'
+    ]
+  },
+  {
     version: '1.5.0',
     date: '2026-11-14',
     changes: [
