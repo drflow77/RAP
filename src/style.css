@@ -26,6 +26,13 @@
   --accSoft: rgba(127, 200, 160, .13);
   --ok: #7FC8A0;
   --halo: radial-gradient(120% 80% at 50% -10%, rgba(127, 200, 160, .14), transparent 60%);
+  /* Botones de audio: verde para reproducir y rojo para detener, en todos
+     los temas, para que se distingan bien aun con poca vista */
+  --play: #4CC38A;
+  --playInk: #04140C;
+  --playSoft: rgba(76, 195, 138, .14);
+  --stop: #FF6B6B;
+  --stopSoft: rgba(255, 107, 107, .12);
 }
 
 [data-theme="azul"] {
@@ -43,6 +50,11 @@
   --accSoft: rgba(99, 179, 237, .13);
   --ok: #5FBF9B;
   --halo: radial-gradient(120% 80% at 50% -10%, rgba(99, 179, 237, .16), transparent 60%);
+  --play: #4CC38A;
+  --playInk: #04140C;
+  --playSoft: rgba(76, 195, 138, .14);
+  --stop: #FF6B6B;
+  --stopSoft: rgba(255, 107, 107, .12);
 }
 
 [data-theme="marfil"] {
@@ -59,6 +71,11 @@
   --accSoft: rgba(46, 93, 75, .10);
   --ok: #2E5D4B;
   --halo: radial-gradient(120% 80% at 50% -10%, rgba(46, 93, 75, .08), transparent 60%);
+  --play: #1E8A57;
+  --playInk: #FFFFFF;
+  --playSoft: rgba(30, 138, 87, .10);
+  --stop: #C62828;
+  --stopSoft: rgba(198, 40, 40, .08);
 }
 
 [data-theme="lavanda"] {
@@ -75,6 +92,11 @@
   --accSoft: rgba(88, 75, 168, .10);
   --ok: #3F8C74;
   --halo: radial-gradient(120% 80% at 50% -10%, rgba(88, 75, 168, .10), transparent 60%);
+  --play: #1E8A57;
+  --playInk: #FFFFFF;
+  --playSoft: rgba(30, 138, 87, .10);
+  --stop: #C62828;
+  --stopSoft: rgba(198, 40, 40, .08);
 }
 
 [data-theme="rosa"] {
@@ -91,6 +113,11 @@
   --accSoft: rgba(196, 85, 126, .10);
   --ok: #3F8C74;
   --halo: radial-gradient(120% 80% at 50% -10%, rgba(196, 85, 126, .12), transparent 60%);
+  --play: #1E8A57;
+  --playInk: #FFFFFF;
+  --playSoft: rgba(30, 138, 87, .10);
+  --stop: #C62828;
+  --stopSoft: rgba(198, 40, 40, .08);
 }
 
 [data-theme="negro"] {
@@ -108,6 +135,11 @@
   --accSoft: rgba(255, 255, 255, .09);
   --ok: #7FC8A0;
   --halo: none;
+  --play: #4CC38A;
+  --playInk: #04140C;
+  --playSoft: rgba(76, 195, 138, .14);
+  --stop: #FF6B6B;
+  --stopSoft: rgba(255, 107, 107, .12);
 }
 
 :root {
@@ -449,55 +481,71 @@ button:active {
   text-wrap: pretty;
 }
 
-/* Escuchar / Pausar / Continuar, a la vista desde el inicio del devocional */
+/* Escuchar / Pausar / Continuar, a la vista desde el inicio del devocional.
+   Grandes y con color (verde reproducir, rojo detener) porque muchas veces
+   quien escucha es quien ya no ve bien la letra. */
 .audio-controls {
   margin-top: 16px;
   display: flex;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .audio-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 18px 10px 12px;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 22px 8px 9px;
   border-radius: 999px;
-  border: none;
-  background: var(--acc);
-  color: var(--accInk);
-  font: 700 0.8125rem var(--font-sans);
+  border: 2px solid var(--play);
+  background: var(--play);
+  color: var(--playInk);
+  font: 700 1rem var(--font-sans);
   cursor: pointer;
 }
 
 .audio-icon {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, .14);
+  background: rgba(0, 0, 0, .16);
 }
 
+.audio-icon svg,
+.audio-stop svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Mientras suena: contorno verde y «Pausar» */
 .audio-btn.active {
-  background: var(--accSoft);
-  color: var(--acc);
-  box-shadow: inset 0 0 0 1px var(--acc);
+  background: var(--playSoft);
+  color: var(--play);
 }
 
-.audio-btn.active .audio-icon { background: var(--accSoft); }
+.audio-btn.active .audio-icon { background: var(--playSoft); }
 
 .audio-stop {
-  width: 42px;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 20px 8px 16px;
   border-radius: 999px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink2);
+  border: 2px solid var(--stop);
+  background: var(--stopSoft);
+  color: var(--stop);
+  font: 700 1rem var(--font-sans);
   cursor: pointer;
 }
 
 .audio-stop[hidden] { display: none; }
+
+/* En la Biblia va justo debajo de la barra del capítulo */
+.bible-audio { margin-top: 0; }
 
 .devotional-body {
   padding: 0 20px 20px;
@@ -2334,15 +2382,16 @@ select.bible-version-chip {
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 6px;
-  border-radius: 999px;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: 14px;
   border: 1px solid var(--line);
   background: var(--surf);
   color: var(--ink);
-  font: 700 0.7188rem var(--font-sans);
+  font: 700 0.6875rem var(--font-sans);
 }
 
 .bible-sel-btn span {
@@ -2358,6 +2407,18 @@ select.bible-version-chip {
 .bible-sel-btn.on {
   background: var(--accSoft);
   color: var(--acc);
+}
+
+.bible-sel-btn.listen {
+  border: 2px solid var(--play);
+  background: var(--playSoft);
+  color: var(--play);
+}
+
+.bible-sel-btn.listen.on {
+  border-color: var(--stop);
+  background: var(--stopSoft);
+  color: var(--stop);
 }
 
 .bible-result {

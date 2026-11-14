@@ -27,12 +27,12 @@ export function renderDevotionalCard(container, devotional, { onOpenPassage } = 
         <div class="devotional-theme">${esc(devotional.theme)}</div>
         <h2 class="devotional-title">${esc(devotional.title)}</h2>
         <div class="audio-controls">
-          <button id="btn-audio-listen" class="audio-btn ${audioState !== 'idle' ? 'active' : ''}">
+          <button id="btn-audio-listen" class="audio-btn ${audioState === 'playing' ? 'active' : ''}">
             <span class="audio-icon">${AUDIO[audioState].icon}</span>
             <span id="audio-text">${AUDIO[audioState].label}</span>
           </button>
-          <button id="btn-audio-stop" class="audio-stop" ${audioState === 'idle' ? 'hidden' : ''} aria-label="Detener y volver al inicio" title="Detener">
-            ${icons.stop}
+          <button id="btn-audio-stop" class="audio-stop" ${audioState === 'idle' ? 'hidden' : ''} title="Detener y volver al inicio">
+            ${icons.stop}<span>Detener</span>
           </button>
         </div>
         ${devotional.pending ? '<span class="pending-tag">Devocional en espera</span>' : ''}
@@ -113,7 +113,7 @@ export function renderDevotionalCard(container, devotional, { onOpenPassage } = 
     const stopBtn = container.querySelector('#btn-audio-stop');
     if (!audioBtn || !stopBtn) return;
     const state = notificationService.playbackState(devotional);
-    audioBtn.classList.toggle('active', state !== 'idle');
+    audioBtn.classList.toggle('active', state === 'playing');
     audioBtn.querySelector('.audio-icon').innerHTML = AUDIO[state].icon;
     audioBtn.querySelector('#audio-text').textContent = AUDIO[state].label;
     stopBtn.hidden = state === 'idle';

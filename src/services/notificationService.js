@@ -56,8 +56,10 @@ async function playNative(from) {
   } catch (e) {
     console.warn('Error en la lectura de audio:', e);
     if (current !== run) return;
+    const onEnd = reading?.onEnd;
     reading = null;
-    alert('No se pudo leer el devocional. Revisa que tu teléfono tenga una voz en español en Ajustes > Texto a voz.');
+    onEnd?.();
+    alert('No se pudo leer en voz alta. Revisa que tu teléfono tenga una voz en español en Ajustes > Texto a voz.');
   }
 }
 
@@ -253,8 +255,6 @@ export const notificationService = {
       return false;
     }
 
-    this.stopSpeaking();
-
     // Los días en espera solo tienen título, pasaje y versículo: se leen esos.
     const textToRead = [
       `${devotional.title}.`,
@@ -267,9 +267,21 @@ export const notificationService = {
       devotional.closingDeclaration ? `Declaración final: ${devotional.closingDeclaration}` : null
     ].filter(Boolean).join(' ');
 
+    return this.speakText(devotionalKey(devotional), textToRead, onEnd);
+  },
+
+  // Lee cualquier texto (capítulos y versículos de la Biblia). `key` identifica
+  // la lectura para saber si un botón está sonando, en pausa o sin lectura.
+  speakText(key, text, onEnd = null) {
+    if (!isNative && !('speechSynthesis' in window)) {
+      alert('Tu navegador no soporta lectura de audio.');
+      return false;
+    }
+
+    this.stopSpeaking();
     reading = {
-      key: devotionalKey(devotional),
-      sentences: splitSentences(speakableReferences(textToRead)),
+      key,
+      sentences: splitSentences(speakableReferences(text)),
       index: 0,
       state: 'playing',
       onEnd
@@ -294,10 +306,16 @@ export const notificationService = {
     else playWeb(reading.index);
   },
 
-  // 'playing' | 'paused' | 'idle' para el devocional dado
-  playbackState(devotional) {
-    if (!reading || reading.key !== devotionalKey(devotional)) return 'idle';
+  // 'playing' | 'paused' | 'idle' para el devocional (o la clave de speakText) dado
+  playbackState(devotionalOrKey) {
+    const key = typeof devotionalOrKey === 'string' ? devotionalOrKey : devotionalKey(devotionalOrKey);
+    if (!reading || reading.key !== key) return 'idle';
     return reading.state;
+  },
+
+  // Clave de la lectura en curso o en pausa (null si no hay)
+  currentKey() {
+    return reading?.key ?? null;
   },
 
   // Muestra breve al elegir una voz en Ajustes (solo navegador)

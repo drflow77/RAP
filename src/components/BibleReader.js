@@ -20,6 +20,7 @@ import {
   normalize,
   youVersionUrl
 } from '../services/bibleService.js';
+import { notificationService } from '../services/notificationService.js';
 import { icons } from './icons.js';
 import { esc } from './escape.js';
 import { renderReadingPlanCard, firstChapterOf } from './ReadingPlanCard.js';
@@ -40,6 +41,60 @@ let root = null;
 let data = null;
 let loadError = false;
 let readingPlan = null; // { readings, checked, onToggle } del plan de lectura de hoy
+
+// ── Lectura en voz alta ──
+// El capítulo se escucha con Escuchar → Pausar → Continuar (■ detiene), como
+// el devocional; los versículos seleccionados, desde la barra de selección.
+const AUDIO = {
+  idle: { icon: icons.speaker, label: 'Escuchar capítulo' },
+  playing: { icon: icons.pause, label: 'Pausar' },
+  paused: { icon: icons.play, label: 'Continuar' }
+};
+
+const chapterAudioKey = () => `bible:${storage.getBibleState().version}:${ui.book}:${ui.chapter}`;
+const selectionAudioKey = () =>
+  `bible-sel:${storage.getBibleState().version}:${ui.book}:${ui.chapter}:${[...ui.selected].sort((a, b) => a - b).join(',')}`;
+
+// Al cambiar de capítulo o de vista se calla la Biblia (el devocional sigue)
+function stopBibleAudio() {
+  if (/^bible(-sel)?:/.test(notificationService.currentKey() || '')) notificationService.stopSpeaking();
+}
+
+function stopSelectionAudio() {
+  if ((notificationService.currentKey() || '').startsWith('bible-sel:')) notificationService.stopSpeaking();
+}
+
+function chapterSpeechText() {
+  const verses = getChapter(data, ui.book, ui.chapter);
+  return `${BIBLE_BOOKS[ui.book].name}, capítulo ${ui.chapter}. ${verses.join(' ')}`;
+}
+
+function selectionSpeechText() {
+  const verses = [...ui.selected].sort((a, b) => a - b);
+  const chapter = getChapter(data, ui.book, ui.chapter);
+  return `${formatReference(ui.book, ui.chapter, verses)}. ${verses.map((v) => chapter[v - 1]).join(' ')}`;
+}
+
+// Se buscan los botones cada vez: la vista pudo redibujarse mientras leía
+function paintAudio() {
+  if (!root) return;
+  const btn = root.querySelector('#bible-audio-listen');
+  const stop = root.querySelector('#bible-audio-stop');
+  if (btn && stop) {
+    const state = notificationService.playbackState(chapterAudioKey());
+    btn.classList.toggle('active', state === 'playing');
+    btn.querySelector('.audio-icon').innerHTML = AUDIO[state].icon;
+    btn.querySelector('.audio-text').textContent = AUDIO[state].label;
+    stop.hidden = state === 'idle';
+  }
+  const sel = root.querySelector('#bible-sel-listen');
+  if (sel) {
+    const on = ui.selected.size > 0 && notificationService.playbackState(selectionAudioKey()) !== 'idle';
+    sel.classList.toggle('on', on);
+    sel.setAttribute('aria-label', on ? 'Detener lectura' : 'Escuchar');
+    sel.innerHTML = `${on ? icons.stop : icons.speaker}<span>${on ? 'Detener' : 'Escuchar'}</span>`;
+  }
+}
 
 export function renderBible(container, { target = null, onTargetConsumed, plan = null } = {}) {
   root = container;
@@ -86,6 +141,7 @@ function rangeOf(ref) {
 }
 
 function openReader(book, chapter, focusVerses = null, redraw = true) {
+  stopBibleAudio();
   ui.view = 'reader';
   ui.book = book;
   ui.chapter = chapter;
@@ -100,6 +156,7 @@ function openReader(book, chapter, focusVerses = null, redraw = true) {
 }
 
 function go(view) {
+  stopBibleAudio();
   ui.view = view;
   ui.selected = new Set();
   draw();
@@ -331,6 +388,7 @@ function drawReader() {
     : ui.book < BIBLE_BOOKS.length - 1 ? { book: ui.book + 1, chapter: 1 } : null;
 
   const focus = new Set(ui.focusVerses || []);
+  const audioState = notificationService.playbackState(chapterAudioKey());
 
   root.innerHTML = `
     <div class="stack-14 view-enter">
@@ -338,6 +396,16 @@ function drawReader() {
         `<button class="bible-bar-ref" id="bible-pick-chapter">${esc(book.name)} ${ui.chapter} ${icons.chevronRight}</button>`,
         `<span class="bible-version-chip">${esc(version.short)}</span>`
       )}
+
+      <div class="audio-controls bible-audio">
+        <button id="bible-audio-listen" class="audio-btn ${audioState === 'playing' ? 'active' : ''}">
+          <span class="audio-icon">${AUDIO[audioState].icon}</span>
+          <span class="audio-text">${AUDIO[audioState].label}</span>
+        </button>
+        <button id="bible-audio-stop" class="audio-stop" ${audioState === 'idle' ? 'hidden' : ''} title="Detener y volver al inicio">
+          ${icons.stop}<span>Detener</span>
+        </button>
+      </div>
 
       <article class="bible-text" id="bible-text">
         ${verses.map((text, i) => {
@@ -385,9 +453,24 @@ function drawReader() {
   root.querySelector('#bible-prev')?.addEventListener('click', () => prev && openReader(prev.book, prev.chapter));
   root.querySelector('#bible-next')?.addEventListener('click', () => next && openReader(next.book, next.chapter));
 
+  root.querySelector('#bible-audio-listen').addEventListener('click', () => {
+    const key = chapterAudioKey();
+    const state = notificationService.playbackState(key);
+    if (state === 'playing') notificationService.pauseSpeaking();
+    else if (state === 'paused') notificationService.resumeSpeaking(paintAudio);
+    else notificationService.speakText(key, chapterSpeechText(), paintAudio);
+    paintAudio();
+  });
+
+  root.querySelector('#bible-audio-stop').addEventListener('click', () => {
+    notificationService.stopSpeaking();
+    paintAudio();
+  });
+
   root.querySelectorAll('.bv').forEach((el) => {
     el.addEventListener('click', () => {
       const n = parseInt(el.getAttribute('data-v'), 10);
+      stopSelectionAudio();
       if (ui.selected.has(n)) ui.selected.delete(n);
       else ui.selected.add(n);
       el.classList.toggle('selected', ui.selected.has(n));
@@ -413,6 +496,7 @@ function selectionBar() {
   if (!ui.selected.size) return '<div id="bible-selection"></div>';
   const verses = [...ui.selected];
   const allSaved = verses.every((v) => storage.isVerseSaved(ui.book, ui.chapter, v));
+  const listening = notificationService.playbackState(selectionAudioKey()) !== 'idle';
   return `
     <div id="bible-selection" class="bible-selection" role="toolbar" aria-label="Versículos seleccionados">
       <div class="bible-selection-head">
@@ -420,6 +504,9 @@ function selectionBar() {
         <button class="bible-sel-close" id="bible-sel-clear" aria-label="Quitar selección">${icons.close}</button>
       </div>
       <div class="bible-selection-actions">
+        <button class="bible-sel-btn listen ${listening ? 'on' : ''}" id="bible-sel-listen" aria-label="${listening ? 'Detener lectura' : 'Escuchar'}">
+          ${listening ? icons.stop : icons.speaker}<span>${listening ? 'Detener' : 'Escuchar'}</span>
+        </button>
         <button class="bible-sel-btn" id="bible-sel-copy" aria-label="Copiar">${icons.copy}<span>Copiar</span></button>
         <button class="bible-sel-btn" id="bible-sel-share" aria-label="Compartir">${icons.share}<span>Compartir</span></button>
         <button class="bible-sel-btn ${allSaved ? 'on' : ''}" id="bible-sel-save" aria-label="${allSaved ? 'Quitar de guardados' : 'Guardar'}">
@@ -461,6 +548,13 @@ function bindSelectionBar() {
   const bar = root.querySelector('#bible-selection');
   if (!bar || !ui.selected.size) return;
 
+  bar.querySelector('#bible-sel-listen').addEventListener('click', () => {
+    const key = selectionAudioKey();
+    if (notificationService.playbackState(key) !== 'idle') notificationService.stopSpeaking();
+    else notificationService.speakText(key, selectionSpeechText(), paintAudio);
+    paintAudio();
+  });
+
   bar.querySelector('#bible-sel-copy').addEventListener('click', async (e) => {
     const btn = e.currentTarget;
     try {
@@ -499,6 +593,7 @@ function bindSelectionBar() {
   });
 
   bar.querySelector('#bible-sel-clear').addEventListener('click', () => {
+    stopSelectionAudio();
     ui.selected = new Set();
     root.querySelectorAll('.bv.selected').forEach((el) => el.classList.remove('selected'));
     refreshSelectionBar();

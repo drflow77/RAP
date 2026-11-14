@@ -3,6 +3,15 @@
 // publicación, y mantén igual package.json y el CACHE_NAME de public/sw.js.
 export const CHANGELOG = [
   {
+    version: '1.5.0',
+    date: '2026-11-14',
+    changes: [
+      'Biblia: nuevo botón «Escuchar capítulo» arriba del texto, con «Pausar», «Continuar» y ■ para detener, igual que el devocional (en Android, con la voz del teléfono)',
+      'Biblia: al tocar uno o varios versículos, la barra trae «Escuchar» para oír solo esos versículos con su cita',
+      'Botones de audio más grandes y fáciles de ver: verde para escuchar y continuar, contorno verde mientras suena y «Detener» en rojo (también en el devocional)'
+    ]
+  },
+  {
     version: '1.4.0',
     date: '2026-11-12',
     changes: [
